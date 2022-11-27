@@ -1,0 +1,21 @@
+plugins {
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.telegram:telegrambots:6.3.0'
+    implementation 'com.google.guava:guava:30.1-jre'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+}
+
+application {
+    mainClass = 'telegram.bot.App'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
