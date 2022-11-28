@@ -4,6 +4,10 @@
 package telegram.bot;
 
 public class Bot {
+
+    private static final String TOKEN = "5875128546:AAFOh5PcjAJhjXH6a48TVM815POyQCXc6bs";
+    private static final String BOT_NAME = "omsk55_weather_bot";
+
     public String getGreeting() {
         return "Hello World!";
     }
