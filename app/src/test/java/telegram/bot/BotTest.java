@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BotTest {
     @Test void appHasAGreeting() {
-        Bot classUnderTest = new Bot();
-        assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
+        Main classUnderTest = new Main();
+
     }
 }
