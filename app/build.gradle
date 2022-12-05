@@ -10,10 +10,24 @@ dependencies {
     implementation 'org.telegram:telegrambots:6.3.0'
     implementation 'com.google.guava:guava:30.1-jre'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+    implementation 'org.slf4j:slf4j-api:2.0.5'
+    implementation 'org.slf4j:slf4j-simple:2.0.3'
 }
 
 application {
-    mainClass = 'telegram.bot.App'
+    mainClass = 'telegram.bot.Main'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'telegram.bot.Main'
+        )
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it)}
+    }
 }
 
 tasks.named('test') {
