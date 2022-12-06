@@ -5,8 +5,7 @@ import static telegram.bot.StringUtils.isFriendName;
 
 import java.util.Collections;
 import java.util.Locale;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -19,7 +18,7 @@ public class WeatherBot extends TelegramLongPollingBot {
     private static final String TOKEN = "5875128546:AAFOh5PcjAJhjXH6a48TVM815POyQCXc6bs";
     private static final String BOT_NAME = "omsk55_weather_bot";
     public static Long currentChatId;
-    Logger logger = LoggerFactory.getLogger(WeatherBot.class);
+    Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     public WeatherBot(DefaultBotOptions options) {
         super(options);
