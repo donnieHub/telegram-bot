@@ -5,11 +5,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-public class StringUtils {
+public class Utils {
 
     private static final List<String> names = Arrays.asList("дмитрий", "дима", "димас", "димон", "илья", "ильюха", "dima", "ilia");
     protected static final List<String> filthyWords = Arrays.asList("Пашел нахуй!", "Пшел вон!", "Иди в пизду!", "Иди нахуй и там погибни!", "Иди на три хуя сразу!", "Сдохни гнида!", "Нахуй иди!", "Ты уёбок!");
-
 
     public static String isFriendName(String line) {
         line = line.toLowerCase(Locale.ROOT);
