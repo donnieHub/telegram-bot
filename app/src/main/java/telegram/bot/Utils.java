@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public class Utils {
 
     private static final List<String> names = Arrays.asList("дмитрий", "дима", "димас", "димон", "илья", "ильюха", "dima", "ilia");
-    protected static final List<String> filthyWords = Arrays.asList("Пашел нахуй!", "Пшел вон!", "Иди в пизду!", "Иди нахуй и там погибни!", "Иди на три хуя сразу!", "Сдохни гнида!", "Нахуй иди!", "Ты уёбок!");
+    protected static final List<String> filthyWords = Arrays.asList("Добрый день!", "Здравствуйте!", "Рад Вас видеть!", "Добро пожаловать!", "Доброво времени суток!", "Привет!", "Салют!", "Ты красавчик!");
 
     public static String isFriendName(String line) {
         line = line.toLowerCase(Locale.ROOT);
@@ -19,7 +19,7 @@ public class Utils {
                 .distinct()
                 .filter(names::contains)
                 .collect(Collectors.toList());
-            String capitalizedName = null;
+            String capitalizedName;
             try {
                 capitalizedName = friendName.get(0).substring(0, 1).toUpperCase() + friendName.get(0).substring(1);
             } catch (Exception e) {

@@ -21,6 +21,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.apache.http.entity.StringEntity;
 
 public class WeatherBot extends TelegramLongPollingBot {
 
@@ -107,7 +108,7 @@ public class WeatherBot extends TelegramLongPollingBot {
                 this.execute(SendMessage
                     .builder()
                     .chatId(message.getChatId())
-                    .text(isFriendName(messageLine) + ", " + filthyWords.get(0).toLowerCase(Locale.ROOT) + " \uD83D\uDD95\uD83C\uDFFC")
+                    .text(isFriendName(messageLine) + ", " + filthyWords.get(0).toLowerCase(Locale.ROOT) + " \uD83D\uDE42")
                     .build());
             }
             else {
