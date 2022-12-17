@@ -1,17 +1,27 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
-version 'unspecified'
+group = 'org.mychko'
+version = '0.0.1-SNAPSHOT'
+archivesBaseName = 'weather-analysis'
+sourceCompatibility = 11
+targetCompatibility = 11
 
 repositories {
     mavenCentral()
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'WeatherAnalysisApplication'
+    }
+
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+}
 dependencies {
     implementation 'com.google.code.gson:gson:2.10'
-}
-
-test {
-    useJUnitPlatform()
 }
