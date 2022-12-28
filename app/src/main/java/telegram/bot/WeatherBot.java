@@ -1,8 +1,12 @@
 package telegram.bot;
 
+import static telegram.bot.CityName.MOSCOW;
+import static telegram.bot.CityName.OMSK;
+import static telegram.bot.CityName.SAINT_PETERSBURG;
 import static telegram.bot.Utils.filthyWords;
 import static telegram.bot.Utils.isFriendName;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,10 +25,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.apache.http.entity.StringEntity;
+import telegram.bot.forecast.WeatherAnalysisApplication;
 
 public class WeatherBot extends TelegramLongPollingBot {
 
+    //TODO спрятать токен
     private static final String TOKEN = "5875128546:AAFOh5PcjAJhjXH6a48TVM815POyQCXc6bs";
     private static final String BOT_NAME = "omsk55_weather_bot";
     public static Long currentChatId;
@@ -35,10 +40,20 @@ public class WeatherBot extends TelegramLongPollingBot {
     public WeatherBot(DefaultBotOptions options) {
         super(options);
         cityButtons.add(Arrays.asList(
-            InlineKeyboardButton.builder().text(City.OMSK.getRuCity()).callbackData("В Омске -35°C").build(),
-            InlineKeyboardButton.builder().text(City.SAINT_PETERSBURG.getRuCity()).callbackData("В Санкт-Петербурге -1°C").build(),
-            InlineKeyboardButton.builder().text(City.MOSCOW.getRuCity()).callbackData("В Москве -10°C").build()));
+            InlineKeyboardButton.builder().text(OMSK.getRuCity())
+                .callbackData("В Омске " + getTemp(OMSK.toString())).build(),
+            InlineKeyboardButton.builder().text(SAINT_PETERSBURG.getRuCity()).
+                callbackData("В Санкт-Петербурге " + getTemp(SAINT_PETERSBURG.toString())).build(),
+            InlineKeyboardButton.builder().text(MOSCOW.getRuCity())
+                .callbackData("В Москве " + getTemp(MOSCOW.toString())).build()));
         doneButton.add(Arrays.asList(InlineKeyboardButton.builder().text("Готово!").build()));
+    }
+
+    public String getTemp(String city) {
+        WeatherAnalysisApplication weather = new WeatherAnalysisApplication();
+        String[] cities = new String[1];
+        cities[0] = city;
+        return String.valueOf(weather.getTemp(cities));
     }
 
     @Override

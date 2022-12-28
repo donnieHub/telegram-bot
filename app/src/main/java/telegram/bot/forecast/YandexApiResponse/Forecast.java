@@ -1,7 +1,7 @@
-package json.YandexApiResponse;
+package telegram.bot.forecast.YandexApiResponse;
 
-import java.util.List;
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class Forecast {

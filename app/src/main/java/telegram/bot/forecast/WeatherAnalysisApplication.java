@@ -1,3 +1,5 @@
+package telegram.bot.forecast;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.IOException;
@@ -5,7 +7,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import json.YandexApiResponse.YandexWeatherResponse;
+import telegram.bot.City;
+import telegram.bot.CityName;
+import telegram.bot.forecast.YandexApiResponse.YandexWeatherResponse;
 
 public class WeatherAnalysisApplication {
 
@@ -13,39 +17,43 @@ public class WeatherAnalysisApplication {
 	private final static String URI = "https://api.weather.yandex.ru/v2/informers";
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-
 		WeatherAnalysisApplication app = new WeatherAnalysisApplication();
-		City city = app.citySelection(args);
-		HttpClient client = app.createClient();
-		HttpRequest request = app.createGetRequest(
-				app.createURI(
-						URI,
-						"?lat=" + city.getCoord().getLat(),
-						"&lon=" + city.getCoord().getLon()));
+		Long temp = app.getTemp(args);
+		System.out.println("Погода в городе " + temp);
+	}
 
-
-		HttpResponse<String> response = app.getApiResponse(client, request);
+	public Long getTemp(String[] userCity) {
+		City city = this.citySelection(userCity);
+		HttpClient client = this.createClient();
+		HttpRequest request = this.createGetRequest(
+			this.createURI(
+				URI,
+				"?lat=" + city.getCoord().getLat(),
+				"&lon=" + city.getCoord().getLon()));
+		HttpResponse<String> response = null;
+		try {
+			response = this.getApiResponse(client, request);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
 		String json = response.body();
 		YandexWeatherResponse responseJson = gson.fromJson(json, YandexWeatherResponse.class);
-
-		System.out.println("Погода в городе " + city.getCityName());
-		System.out.println(response.statusCode());
-		System.out.println(response.body());
-		System.out.println("--------------------------------------------------------");
-		System.out.println(responseJson.getFact().getTemp());
+		return responseJson.getFact().getTemp();
 	}
 
-	private City citySelection(String args[]) {
+	private City citySelection(String[] args) {
 		City city = null;
 		if (args.length == 0) {
-			city = new City(CityName.SPB, City.cityCoord.get(CityName.SPB));
+			city = new City(CityName.SAINT_PETERSBURG, City.cityCoord.get(CityName.SAINT_PETERSBURG));
 		} else {
 			try {
 				CityName.valueOf(args[0]);
 			} catch (IllegalArgumentException e) {
-				throw new RuntimeException(args[0] + " is not the city. Please insert name of the city for example OMSK");
+				throw new RuntimeException(args + " is not the city. Please insert name of the city for example OMSK");
 			}
 			city = new City(CityName.valueOf(args[0]));
 		}

@@ -1,11 +1,7 @@
-package json.YandexApiResponse;
+package telegram.bot.forecast.YandexApiResponse;
 
 import com.google.gson.annotations.SerializedName;
-import json.YandexApiResponse.Fact;
-import json.YandexApiResponse.Forecast;
-import json.YandexApiResponse.Info;
 
-@SuppressWarnings("unused")
 public class YandexWeatherResponse {
 
     @SerializedName("fact")

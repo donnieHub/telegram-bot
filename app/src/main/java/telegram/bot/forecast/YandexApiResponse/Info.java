@@ -1,4 +1,4 @@
-package json.YandexApiResponse;
+package telegram.bot.forecast.YandexApiResponse;
 
 import com.google.gson.annotations.SerializedName;
 
