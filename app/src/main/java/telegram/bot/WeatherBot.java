@@ -6,7 +6,7 @@ import static telegram.bot.CityName.SAINT_PETERSBURG;
 import static telegram.bot.Utils.filthyWords;
 import static telegram.bot.Utils.isFriendName;
 
-import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,11 +41,11 @@ public class WeatherBot extends TelegramLongPollingBot {
         super(options);
         cityButtons.add(Arrays.asList(
             InlineKeyboardButton.builder().text(OMSK.getRuCity())
-                .callbackData("В Омске " + getTemp(OMSK.toString())).build(),
+                .callbackData("В Омске ").build(),
             InlineKeyboardButton.builder().text(SAINT_PETERSBURG.getRuCity()).
-                callbackData("В Санкт-Петербурге " + getTemp(SAINT_PETERSBURG.toString())).build(),
+                callbackData("В Санкт-Петербурге ").build(),
             InlineKeyboardButton.builder().text(MOSCOW.getRuCity())
-                .callbackData("В Москве " + getTemp(MOSCOW.toString())).build()));
+                    .callbackData("В Москве ").build()));
         doneButton.add(Arrays.asList(InlineKeyboardButton.builder().text("Готово!").build()));
     }
 
@@ -68,6 +68,7 @@ public class WeatherBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+
         if (update.hasCallbackQuery()) {
             try {
                 handle(update.getCallbackQuery());
@@ -134,7 +135,21 @@ public class WeatherBot extends TelegramLongPollingBot {
 
     private void handle(CallbackQuery callbackQuery) throws TelegramApiException {
         Message message = callbackQuery.getMessage();
-        String cityTemperature = callbackQuery.getData();
+        String city = callbackQuery.getData();
+        switch (city) {
+            case "В Омске ":
+                city += getTemp(OMSK.toString());
+                break;
+            case "В Санкт-Петербурге ":
+                city += getTemp(SAINT_PETERSBURG.toString());
+                break;
+            case "В Москве ":
+                city += getTemp(MOSCOW.toString()) + LocalDateTime.now();
+                break;
+            default:
+                city += "Температура не известна";
+        }
+
         logger.info("chatId: " + WeatherBot.currentChatId);
         logger.info("callbackQuery message: " + message.getText());
         logger.info("callbackQuery getFrom: " + callbackQuery.getFrom().getFirstName());
@@ -145,7 +160,7 @@ public class WeatherBot extends TelegramLongPollingBot {
         this.execute(SendMessage
             .builder()
             .chatId(message.getChatId())
-            .text(cityTemperature)
+            .text(city)
             .build());
     }
 }
