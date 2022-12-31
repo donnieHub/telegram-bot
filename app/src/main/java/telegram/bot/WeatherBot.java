@@ -144,7 +144,7 @@ public class WeatherBot extends TelegramLongPollingBot {
                 city += getTemp(SAINT_PETERSBURG.toString());
                 break;
             case "В Москве ":
-                city += getTemp(MOSCOW.toString()) + LocalDateTime.now();
+                city += getTemp(MOSCOW.toString());
                 break;
             default:
                 city += "Температура не известна";
@@ -153,7 +153,7 @@ public class WeatherBot extends TelegramLongPollingBot {
         logger.info("chatId: " + WeatherBot.currentChatId);
         logger.info("callbackQuery message: " + message.getText());
         logger.info("callbackQuery getFrom: " + callbackQuery.getFrom().getFirstName());
-        logger.info("cityTemperature: " + callbackQuery.getData());
+        logger.info("cityTemperature: " + city);
         // обновляем кнопки
         this.execute(EditMessageReplyMarkup.builder().chatId(WeatherBot.currentChatId).messageId(message.getMessageId()).replyMarkup(
             InlineKeyboardMarkup.builder().clearKeyboard().build()).build());

@@ -13,7 +13,7 @@ public class MyLogger {
     public static void create() throws IOException {
         Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
         logger.setLevel(Level.INFO);
-        fileTxt = new FileHandler("log.txt");
+        fileTxt = new FileHandler("log.txt", true);
         formatterTxt = new SimpleFormatter();
         fileTxt.setFormatter(formatterTxt);
         logger.addHandler(fileTxt);
