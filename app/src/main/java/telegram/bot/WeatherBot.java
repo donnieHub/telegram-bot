@@ -6,7 +6,6 @@ import static telegram.bot.CityName.SAINT_PETERSBURG;
 import static telegram.bot.Utils.filthyWords;
 import static telegram.bot.Utils.isFriendName;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,7 +24,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import telegram.bot.forecast.WeatherAnalysisApplication;
+import telegram.bot.forecast.ForecastService;
 
 public class WeatherBot extends TelegramLongPollingBot {
 
@@ -35,6 +34,7 @@ public class WeatherBot extends TelegramLongPollingBot {
     public static Long currentChatId;
     List<List<InlineKeyboardButton>> cityButtons = new ArrayList<>();
     List<List<InlineKeyboardButton>> doneButton = new ArrayList<>();
+    ForecastService weather = ForecastService.getInstance();
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     public WeatherBot(DefaultBotOptions options) {
@@ -50,10 +50,7 @@ public class WeatherBot extends TelegramLongPollingBot {
     }
 
     public String getTemp(String city) {
-        WeatherAnalysisApplication weather = new WeatherAnalysisApplication();
-        String[] cities = new String[1];
-        cities[0] = city;
-        return String.valueOf(weather.getTemp(cities));
+        return String.valueOf(weather.getTemp(city));
     }
 
     @Override
@@ -103,8 +100,13 @@ public class WeatherBot extends TelegramLongPollingBot {
                                 .replyMarkup(InlineKeyboardMarkup.builder().keyboard(cityButtons).build()).build()
                         );
                         break;
+                    case "/game":
+                        this.execute(
+                            SendMessage.builder().chatId(WeatherBot.currentChatId).text("Игра в разработке").build());
+                    break;
                 }
                 logger.info("chatId: " + WeatherBot.currentChatId);
+                logger.info("bot_command getFrom: " + message.getFrom().getFirstName());
                 logger.info("bot_command: " + message.getEntities().get(0).getType());
                 return;
             }
@@ -112,6 +114,7 @@ public class WeatherBot extends TelegramLongPollingBot {
         if (message.hasText()) {
             String messageLine = message.getText();
             logger.info("chatId: " + WeatherBot.currentChatId);
+            logger.info("message getFrom: " + message.getFrom().getFirstName());
             logger.info("message text: " + messageLine);
             if (messageLine.contains("Владимир".toLowerCase(Locale.ROOT))) {
                 this.execute(SendMessage
@@ -147,12 +150,12 @@ public class WeatherBot extends TelegramLongPollingBot {
                 city += getTemp(MOSCOW.toString());
                 break;
             default:
-                city += "Температура не известна";
+                city += "Температура неизвестна";
         }
 
         logger.info("chatId: " + WeatherBot.currentChatId);
-        logger.info("callbackQuery message: " + message.getText());
         logger.info("callbackQuery getFrom: " + callbackQuery.getFrom().getFirstName());
+        logger.info("callbackQuery message: " + message.getText());
         logger.info("cityTemperature: " + city);
         // обновляем кнопки
         this.execute(EditMessageReplyMarkup.builder().chatId(WeatherBot.currentChatId).messageId(message.getMessageId()).replyMarkup(

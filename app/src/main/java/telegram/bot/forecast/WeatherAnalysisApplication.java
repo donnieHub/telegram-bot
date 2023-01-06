@@ -11,18 +11,24 @@ import telegram.bot.City;
 import telegram.bot.CityName;
 import telegram.bot.forecast.YandexApiResponse.YandexWeatherResponse;
 
-public class WeatherAnalysisApplication {
+public class WeatherAnalysisApplication implements ForecastService {
 
 	//TODO вынести в properties
 	private final static String URI = "https://api.weather.yandex.ru/v2/informers";
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		WeatherAnalysisApplication app = new WeatherAnalysisApplication();
-		Long temp = app.getTemp(args);
+
+		if (args.length == 0) {
+			throw new RuntimeException("Please insert name of the city for example OMSK");
+		}
+
+		Long temp = app.getTemp(args[0]);
 		System.out.println("Погода в городе " + temp);
 	}
 
-	public Long getTemp(String[] userCity) {
+	@Override
+	public Long getTemp(String userCity) {
 		City city = this.citySelection(userCity);
 		HttpClient client = this.createClient();
 		HttpRequest request = this.createGetRequest(
@@ -45,17 +51,18 @@ public class WeatherAnalysisApplication {
 		return responseJson.getFact().getTemp();
 	}
 
-	private City citySelection(String[] args) {
+	private City citySelection(String cityName) {
 		City city = null;
-		if (args.length == 0) {
+		if (cityName != null && !cityName.trim().isEmpty()) {
 			city = new City(CityName.SAINT_PETERSBURG, City.cityCoord.get(CityName.SAINT_PETERSBURG));
 		} else {
 			try {
-				CityName.valueOf(args[0]);
+				CityName.valueOf(cityName);
 			} catch (IllegalArgumentException e) {
-				throw new RuntimeException(args + " is not the city. Please insert name of the city for example OMSK");
+				throw new RuntimeException(
+					cityName + " is not the city. Please insert name of the city for example OMSK");
 			}
-			city = new City(CityName.valueOf(args[0]));
+			city = new City(CityName.valueOf(cityName));
 		}
 		return city;
 	}
