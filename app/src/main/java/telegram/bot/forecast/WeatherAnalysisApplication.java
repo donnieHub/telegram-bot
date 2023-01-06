@@ -53,7 +53,7 @@ public class WeatherAnalysisApplication implements ForecastService {
 
 	private City citySelection(String cityName) {
 		City city = null;
-		if (cityName != null && !cityName.trim().isEmpty()) {
+		if (cityName == null && cityName.trim().isEmpty()) {
 			city = new City(CityName.SAINT_PETERSBURG, City.cityCoord.get(CityName.SAINT_PETERSBURG));
 		} else {
 			try {
