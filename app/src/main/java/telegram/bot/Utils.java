@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public class Utils {
 
     private static final List<String> names = Arrays.asList("дмитрий", "дима", "димас", "димон", "илья", "ильюха", "dima", "ilia");
-    protected static final List<String> filthyWords = Arrays.asList("Добрый день!", "Здравствуйте!", "Рад Вас видеть!", "Добро пожаловать!", "Доброво времени суток!", "Привет!", "Салют!", "Ты красавчик!");
+    protected static final List<String> greetings = Arrays.asList("Добрый день!", "Здравствуйте!", "Рад Вас видеть!", "Добро пожаловать!", "Доброво времени суток!", "Привет!", "Салют!", "Ты красавчик!");
 
     public static String isFriendName(String line) {
         line = line.toLowerCase(Locale.ROOT);

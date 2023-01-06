@@ -1,22 +1,32 @@
 package telegram.bot.forecast;
 
+import static java.security.Security.getProperty;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.Properties;
 import telegram.bot.City;
 import telegram.bot.CityName;
 import telegram.bot.forecast.YandexApiResponse.YandexWeatherResponse;
 
 public class WeatherAnalysisApplication implements ForecastService {
 
-	//TODO вынести в properties
-	private final static String URI = "https://api.weather.yandex.ru/v2/informers";
+	Properties property = new Properties();
+	private final static String URI = getProperty("Yandex-URI");
+	private final static String API_KEY = getProperty("Yandex-API-Key");
+	private City city;
 
-	public static void main(String[] args) throws IOException, InterruptedException {
+	WeatherAnalysisApplication() {
+		initProperties();
+	}
+
+	public static void main(String[] args) {
 		WeatherAnalysisApplication app = new WeatherAnalysisApplication();
 
 		if (args.length == 0) {
@@ -29,13 +39,10 @@ public class WeatherAnalysisApplication implements ForecastService {
 
 	@Override
 	public Long getTemp(String userCity) {
-		City city = this.citySelection(userCity);
+		city = this.citySelection(userCity);
 		HttpClient client = this.createClient();
-		HttpRequest request = this.createGetRequest(
-			this.createURI(
-				URI,
-				"?lat=" + city.getCoord().getLat(),
-				"&lon=" + city.getCoord().getLon()));
+		HttpRequest request = this.createGetRequest(this.createURI(
+			getUriFromPropertyFile(),"?lat=" + city.getCoord().getLat(), "&lon=" + city.getCoord().getLon()));
 		HttpResponse<String> response = null;
 		try {
 			response = this.getApiResponse(client, request);
@@ -52,7 +59,6 @@ public class WeatherAnalysisApplication implements ForecastService {
 	}
 
 	private City citySelection(String cityName) {
-		City city = null;
 		if (cityName == null && cityName.trim().isEmpty()) {
 			city = new City(CityName.SAINT_PETERSBURG, City.cityCoord.get(CityName.SAINT_PETERSBURG));
 		} else {
@@ -87,8 +93,7 @@ public class WeatherAnalysisApplication implements ForecastService {
 				.uri(java.net.URI.create(uri))
 				.timeout(Duration.ofMinutes(1))
 				.header("Content-Type", "application/json")
-				//TODO вынести в properties
-				.header("X-Yandex-API-Key", "bd804162-bf13-4baa-9508-27b3ba88c782")
+				.header("X-Yandex-API-Key", getApiKeyFromPropertyFile())
 				.GET()
 				.build();
 		return request;
@@ -98,5 +103,22 @@ public class WeatherAnalysisApplication implements ForecastService {
 		HttpResponse<T> response =
 				(HttpResponse<T>) client.send(request, HttpResponse.BodyHandlers.ofString());
 		return response;
+	}
+
+	private void initProperties() {
+		String rootPath = Thread.currentThread().getContextClassLoader().getResource("secret.properties").getPath();
+		try {
+			property.load(new FileInputStream(rootPath));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private String getUriFromPropertyFile(){
+		return property.getProperty(URI);
+	}
+
+	private String getApiKeyFromPropertyFile(){
+		return property.getProperty(API_KEY);
 	}
 }

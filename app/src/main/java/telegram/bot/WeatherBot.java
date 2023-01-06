@@ -3,15 +3,18 @@ package telegram.bot;
 import static telegram.bot.CityName.MOSCOW;
 import static telegram.bot.CityName.OMSK;
 import static telegram.bot.CityName.SAINT_PETERSBURG;
-import static telegram.bot.Utils.filthyWords;
+import static telegram.bot.Utils.greetings;
 import static telegram.bot.Utils.isFriendName;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.logging.Logger;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -29,16 +32,18 @@ import telegram.bot.forecast.ForecastService;
 public class WeatherBot extends TelegramLongPollingBot {
 
     //TODO спрятать токен
-    private static final String TOKEN = "5875128546:AAFOh5PcjAJhjXH6a48TVM815POyQCXc6bs";
+    private static final String TOKEN = "Bot-token";
     private static final String BOT_NAME = "omsk55_weather_bot";
     public static Long currentChatId;
     List<List<InlineKeyboardButton>> cityButtons = new ArrayList<>();
     List<List<InlineKeyboardButton>> doneButton = new ArrayList<>();
     ForecastService weather = ForecastService.getInstance();
+    Properties property = new Properties();
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     public WeatherBot(DefaultBotOptions options) {
         super(options);
+        initProperties();
         cityButtons.add(Arrays.asList(
             InlineKeyboardButton.builder().text(OMSK.getRuCity())
                 .callbackData("В Омске ").build(),
@@ -60,7 +65,7 @@ public class WeatherBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return TOKEN;
+        return getBotTokenFromPropertyFile();
     }
 
     @Override
@@ -92,18 +97,24 @@ public class WeatherBot extends TelegramLongPollingBot {
                 String command = commandEntity.get().getText();
                 switch (command) {
                     case "/start":
-                        this.execute(SendMessage.builder().chatId(WeatherBot.currentChatId).text("Здравствуйте, как Вас зовут?").build());
+                        this.execute(
+                            SendMessage.builder().chatId(WeatherBot.currentChatId).text("Здравствуйте, как Вас зовут?")
+                                .build());
                         break;
                     case "/choose_city":
-                        this.execute(
-                            SendMessage.builder().chatId(WeatherBot.currentChatId).text("В каком городе вы хотите узнать погоду?")
-                                .replyMarkup(InlineKeyboardMarkup.builder().keyboard(cityButtons).build()).build()
-                        );
+                        this.execute(SendMessage.builder().chatId(WeatherBot.currentChatId)
+                            .text("В каком городе вы хотите узнать погоду?")
+                            .replyMarkup(InlineKeyboardMarkup.builder().keyboard(cityButtons).build()).build());
                         break;
                     case "/game":
                         this.execute(
                             SendMessage.builder().chatId(WeatherBot.currentChatId).text("Игра в разработке").build());
-                    break;
+                        break;
+                    default:
+                        this.execute(
+                            SendMessage.builder().chatId(WeatherBot.currentChatId)
+                                .text("Неизвестная команда. Чтобы узнать погоду используйте команду /choose_city")
+                                .build());
                 }
                 logger.info("chatId: " + WeatherBot.currentChatId);
                 logger.info("bot_command getFrom: " + message.getFrom().getFirstName());
@@ -123,11 +134,11 @@ public class WeatherBot extends TelegramLongPollingBot {
                     .text("Привет Владимир!")
                     .build());
             } else if (isFriendName(messageLine) != null) {
-                Collections.shuffle(filthyWords);
+                Collections.shuffle(greetings);
                 this.execute(SendMessage
                     .builder()
                     .chatId(message.getChatId())
-                    .text(isFriendName(messageLine) + ", " + filthyWords.get(0).toLowerCase(Locale.ROOT) + " \uD83D\uDE42")
+                    .text(isFriendName(messageLine) + ", " + greetings.get(0).toLowerCase(Locale.ROOT) + " \uD83D\uDE42")
                     .build());
             }
             else {
@@ -165,5 +176,19 @@ public class WeatherBot extends TelegramLongPollingBot {
             .chatId(message.getChatId())
             .text(city)
             .build());
+    }
+
+    private void initProperties() {
+        String rootPath = Thread.currentThread().getContextClassLoader().getResource("secret.properties").getPath();
+        try {
+            property.load(new FileInputStream(rootPath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private String getBotTokenFromPropertyFile(){
+        return property.getProperty(TOKEN);
     }
 }
