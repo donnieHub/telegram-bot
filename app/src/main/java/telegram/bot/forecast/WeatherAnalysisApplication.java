@@ -18,8 +18,8 @@ import telegram.bot.forecast.YandexApiResponse.YandexWeatherResponse;
 public class WeatherAnalysisApplication implements ForecastService {
 
 	Properties property = new Properties();
-	private final static String URI = getProperty("Yandex-URI");
-	private final static String API_KEY = getProperty("Yandex-API-Key");
+	private final static String URI = "Yandex-URI";
+	private final static String API_KEY = "Yandex-API-Key";
 	private City city;
 
 	WeatherAnalysisApplication() {
