@@ -6,8 +6,6 @@ import static telegram.bot.CityName.SAINT_PETERSBURG;
 import static telegram.bot.Utils.greetings;
 import static telegram.bot.Utils.isFriendName;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,7 +41,7 @@ public class WeatherBot extends TelegramLongPollingBot {
 
     public WeatherBot(DefaultBotOptions options) {
         super(options);
-        initProperties();
+        Utils.initProperties(property);
         cityButtons.add(Arrays.asList(
             InlineKeyboardButton.builder().text(OMSK.getRuCity())
                 .callbackData("В Омске ").build(),
@@ -177,16 +175,6 @@ public class WeatherBot extends TelegramLongPollingBot {
             .text(city)
             .build());
     }
-
-    private void initProperties() {
-        String rootPath = Thread.currentThread().getContextClassLoader().getResource("secret.properties").getPath();
-        try {
-            property.load(new FileInputStream(rootPath));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     private String getBotTokenFromPropertyFile(){
         return property.getProperty(TOKEN);

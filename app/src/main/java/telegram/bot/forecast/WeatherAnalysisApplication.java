@@ -1,10 +1,7 @@
 package telegram.bot.forecast;
 
-import static java.security.Security.getProperty;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -13,6 +10,7 @@ import java.time.Duration;
 import java.util.Properties;
 import telegram.bot.City;
 import telegram.bot.CityName;
+import telegram.bot.Utils;
 import telegram.bot.forecast.YandexApiResponse.YandexWeatherResponse;
 
 public class WeatherAnalysisApplication implements ForecastService {
@@ -23,7 +21,7 @@ public class WeatherAnalysisApplication implements ForecastService {
 	private City city;
 
 	WeatherAnalysisApplication() {
-		initProperties();
+		Utils.initProperties(property);
 	}
 
 	public static void main(String[] args) {
@@ -103,15 +101,6 @@ public class WeatherAnalysisApplication implements ForecastService {
 		HttpResponse<T> response =
 				(HttpResponse<T>) client.send(request, HttpResponse.BodyHandlers.ofString());
 		return response;
-	}
-
-	private void initProperties() {
-		String rootPath = Thread.currentThread().getContextClassLoader().getResource("secret.properties").getPath();
-		try {
-			property.load(new FileInputStream(rootPath));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private String getUriFromPropertyFile(){
