@@ -11,21 +11,21 @@ import java.util.Properties;
 import telegram.bot.City;
 import telegram.bot.CityName;
 import telegram.bot.Utils;
-import telegram.bot.forecast.YandexApiResponse.YandexWeatherResponse;
+import telegram.bot.forecast.yandex.YandexWeatherResponse;
 
-public class WeatherAnalysisApplication implements ForecastService {
+public class ForecastApp implements ForecastService {
 
 	Properties property = new Properties();
 	private final static String URI = "Yandex-URI";
 	private final static String API_KEY = "Yandex-API-Key";
 	private City city;
 
-	WeatherAnalysisApplication() {
+	ForecastApp() {
 		Utils.initProperties(property);
 	}
 
 	public static void main(String[] args) {
-		WeatherAnalysisApplication app = new WeatherAnalysisApplication();
+		ForecastApp app = new ForecastApp();
 
 		if (args.length == 0) {
 			throw new RuntimeException("Please insert name of the city for example OMSK");
