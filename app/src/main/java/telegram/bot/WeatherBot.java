@@ -25,6 +25,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import telegram.bot.finance.FinanceService;
 import telegram.bot.forecast.ForecastService;
 
 public class WeatherBot extends TelegramLongPollingBot {
@@ -36,6 +37,7 @@ public class WeatherBot extends TelegramLongPollingBot {
     List<List<InlineKeyboardButton>> cityButtons = new ArrayList<>();
     List<List<InlineKeyboardButton>> doneButton = new ArrayList<>();
     ForecastService weather = ForecastService.getInstance();
+    FinanceService finance = FinanceService.getInstance();
     Properties property = new Properties();
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
@@ -103,6 +105,10 @@ public class WeatherBot extends TelegramLongPollingBot {
                         this.execute(SendMessage.builder().chatId(WeatherBot.currentChatId)
                             .text("В каком городе вы хотите узнать погоду?")
                             .replyMarkup(InlineKeyboardMarkup.builder().keyboard(cityButtons).build()).build());
+                        break;
+                    case "/dollar_exchange_rate":
+                        this.execute(SendMessage.builder().chatId(WeatherBot.currentChatId)
+                            .text("Курс доллара: " + finance.getDollarExchangeRate()).build());
                         break;
                     case "/game":
                         this.execute(
