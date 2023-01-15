@@ -30,7 +30,6 @@ import telegram.bot.forecast.ForecastService;
 
 public class WeatherBot extends TelegramLongPollingBot {
 
-    //TODO спрятать токен
     private static final String TOKEN = "Bot-token";
     private static final String BOT_NAME = "omsk55_weather_bot";
     public static Long currentChatId;

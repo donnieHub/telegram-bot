@@ -6,15 +6,17 @@ import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 import java.util.Properties;
 import telegram.bot.City;
 import telegram.bot.CityName;
 import telegram.bot.Utils;
+import telegram.bot.client.MyHttpClient;
+import telegram.bot.client.Property;
 import telegram.bot.forecast.yandex.YandexWeatherResponse;
 
-public class ForecastApp implements ForecastService {
+public class ForecastApp implements ForecastService, Property {
 
+	private final MyHttpClient myHttpClient;
 	Properties property = new Properties();
 	private final static String URI = "Yandex-URI";
 	private final static String API_KEY = "Yandex-API-Key";
@@ -22,6 +24,7 @@ public class ForecastApp implements ForecastService {
 
 	ForecastApp() {
 		Utils.initProperties(property);
+		myHttpClient = new MyHttpClient(URI, API_KEY);
 	}
 
 	public static void main(String[] args) {
@@ -37,13 +40,14 @@ public class ForecastApp implements ForecastService {
 
 	@Override
 	public Long getTemp(String userCity) {
-		city = this.citySelection(userCity);
-		HttpClient client = this.createClient();
-		HttpRequest request = this.createGetRequest(this.createURI(
-			getUriFromPropertyFile(),"?lat=" + city.getCoord().getLat(), "&lon=" + city.getCoord().getLon()));
+		city = citySelection(userCity);
+		String uri = myHttpClient.createURI(
+			getUriFromPropertyFile(),"?lat=" + city.getCoord().getLat(), "&lon=" + city.getCoord().getLon());
+		HttpClient client = myHttpClient.createClient();
+		HttpRequest request = myHttpClient.createGetRequest(uri, "X-Yandex-API-Key", getApiKeyFromPropertyFile());
 		HttpResponse<String> response = null;
 		try {
-			response = this.getApiResponse(client, request);
+			response = myHttpClient.getApiResponse(client, request);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
@@ -64,50 +68,20 @@ public class ForecastApp implements ForecastService {
 				CityName.valueOf(cityName);
 			} catch (IllegalArgumentException e) {
 				throw new RuntimeException(
-					cityName + " is not the city. Please insert name of the city for example OMSK");
+					cityName + " is not a city. Please insert name of the city for example OMSK");
 			}
 			city = new City(CityName.valueOf(cityName));
 		}
 		return city;
 	}
 
-	private String createURI (String url, String... params) {
-		StringBuilder uri = new StringBuilder(url);
-		for (String param : params) {
-			uri.append(param);
-		}
-		return uri.toString();
-	}
-
-	private HttpClient createClient() {
-		HttpClient client = HttpClient.newBuilder()
-				.version(HttpClient.Version.HTTP_2)
-				.build();
-		return client;
-	}
-
-	private HttpRequest createGetRequest(String uri) {
-		HttpRequest request = HttpRequest.newBuilder()
-				.uri(java.net.URI.create(uri))
-				.timeout(Duration.ofMinutes(1))
-				.header("Content-Type", "application/json")
-				.header("X-Yandex-API-Key", getApiKeyFromPropertyFile())
-				.GET()
-				.build();
-		return request;
-	}
-
-	private <T> HttpResponse<T> getApiResponse(HttpClient client, HttpRequest request) throws IOException, InterruptedException {
-		HttpResponse<T> response =
-				(HttpResponse<T>) client.send(request, HttpResponse.BodyHandlers.ofString());
-		return response;
-	}
-
-	private String getUriFromPropertyFile(){
+	@Override
+	public String getUriFromPropertyFile(){
 		return property.getProperty(URI);
 	}
 
-	private String getApiKeyFromPropertyFile(){
+	@Override
+	public String getApiKeyFromPropertyFile(){
 		return property.getProperty(API_KEY);
 	}
 }

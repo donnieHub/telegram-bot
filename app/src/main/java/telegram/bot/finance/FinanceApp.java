@@ -6,19 +6,22 @@ import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 import java.util.Properties;
 import telegram.bot.Utils;
+import telegram.bot.client.MyHttpClient;
+import telegram.bot.client.Property;
 import telegram.bot.finance.google.UsdToRub;
 
-public class FinanceApp implements FinanceService {
+public class FinanceApp implements FinanceService, Property {
 
+	private final MyHttpClient myHttpClient;
 	Properties property = new Properties();
 	private final static String URI = "Google-Finance-URI";
 	private final static String API_KEY = "Google-Finance-API-Key";
 
 	FinanceApp() {
 		Utils.initProperties(property);
+		myHttpClient = new MyHttpClient(URI, API_KEY);
 	}
 
 	public static void main(String[] args) {
@@ -31,12 +34,12 @@ public class FinanceApp implements FinanceService {
 
 	@Override
 	public Double getDollarExchangeRate() {
-		HttpClient client = this.createClient();
-		HttpRequest request = this.createGetRequest(this.createURI(
+		HttpClient client = myHttpClient.createClient();
+		HttpRequest request = myHttpClient.createGetRequest(myHttpClient.createURI(
 			getUriFromPropertyFile() + "?engine=google_finance&q=USD-Rub&api_key=" + getApiKeyFromPropertyFile()));
 		HttpResponse<String> response = null;
 		try {
-			response = this.getApiResponse(client, request);
+			response = myHttpClient.getApiResponse(client, request);
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -47,43 +50,11 @@ public class FinanceApp implements FinanceService {
 		return responseJson.getSummary().getExtractedPrice();
 	}
 
-	private String createURI (String url, String... params) {
-		StringBuilder uri = new StringBuilder(url);
-		for (String param : params) {
-			uri.append(param);
-		}
-		return uri.toString();
-	}
-
-	private HttpClient createClient() {
-		HttpClient client = HttpClient.newBuilder()
-				.version(HttpClient.Version.HTTP_2)
-				.build();
-		return client;
-	}
-
-	private HttpRequest createGetRequest(String uri) {
-		HttpRequest request = HttpRequest.newBuilder()
-				.uri(java.net.URI.create(uri))
-				.timeout(Duration.ofMinutes(1))
-				.header("Content-Type", "application/json")
-//				.header("X-Yandex-API-Key", getApiKeyFromPropertyFile())
-				.GET()
-				.build();
-		return request;
-	}
-
-	private <T> HttpResponse<T> getApiResponse(HttpClient client, HttpRequest request) throws IOException, InterruptedException {
-		HttpResponse<T> response =
-				(HttpResponse<T>) client.send(request, HttpResponse.BodyHandlers.ofString());
-		return response;
-	}
-
-	private String getUriFromPropertyFile(){
+	public String getUriFromPropertyFile(){
 		return property.getProperty(URI);
 	}
 
-	private String getApiKeyFromPropertyFile(){
+	public String getApiKeyFromPropertyFile(){
 		return property.getProperty(API_KEY);
 	}
 
