@@ -3,7 +3,7 @@ package telegram.bot.forecast;
 public interface ForecastService {
 
     static ForecastService getInstance() {
-        return new ForecastApp();
+        return new ForecastYandex();
     }
 
     Long getTemp(String cities);

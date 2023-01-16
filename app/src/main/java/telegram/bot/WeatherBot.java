@@ -25,6 +25,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import telegram.bot.commodities.CommoditiesService;
 import telegram.bot.finance.FinanceService;
 import telegram.bot.forecast.ForecastService;
 
@@ -37,6 +38,7 @@ public class WeatherBot extends TelegramLongPollingBot {
     List<List<InlineKeyboardButton>> doneButton = new ArrayList<>();
     ForecastService weather = ForecastService.getInstance();
     FinanceService finance = FinanceService.getInstance();
+    CommoditiesService commodities = CommoditiesService.getInstance();
     Properties property = new Properties();
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
@@ -100,23 +102,37 @@ public class WeatherBot extends TelegramLongPollingBot {
                             SendMessage.builder().chatId(WeatherBot.currentChatId).text("Здравствуйте, как Вас зовут?")
                                 .build());
                         break;
-                    case "/choose_city":
+                    case "/forecast":
                         this.execute(SendMessage.builder().chatId(WeatherBot.currentChatId)
                             .text("В каком городе вы хотите узнать погоду?")
                             .replyMarkup(InlineKeyboardMarkup.builder().keyboard(cityButtons).build()).build());
                         break;
                     case "/dollar_exchange_rate":
                         this.execute(SendMessage.builder().chatId(WeatherBot.currentChatId)
-                            .text("Курс доллара: " + finance.getDollarExchangeRate()).build());
+                            .text("Курс доллара: " + finance.getDollarExchangeRate() + "₽").build());
+                        break;
+                    case "/commodities":
+                        this.execute(SendMessage.builder().chatId(WeatherBot.currentChatId)
+                            .text("Цена на нефть и газ: " + commodities.getCommodityPrice("BRENTOIL").intValue() + "$").build());
                         break;
                     case "/game":
                         this.execute(
                             SendMessage.builder().chatId(WeatherBot.currentChatId).text("Игра в разработке").build());
                         break;
+                    case "/help":
+                        this.execute(
+                            SendMessage.builder().chatId(WeatherBot.currentChatId).text("Список команд:\n"
+                                + "/forecast - погода в городе\n"
+                                + "/dollar_exchange_rate - курс доллара\n"
+                                + "/commodities - цена на нефть и газ\n"
+                                + "/game - игра\n"
+                                + "/help - помощь\n"
+                            ).build());
+                        break;
                     default:
                         this.execute(
                             SendMessage.builder().chatId(WeatherBot.currentChatId)
-                                .text("Неизвестная команда. Чтобы узнать погоду используйте команду /choose_city")
+                                .text("Неизвестная команда. Чтобы узнать список команд введите /help")
                                 .build());
                 }
                 logger.info("chatId: " + WeatherBot.currentChatId);
@@ -145,7 +161,7 @@ public class WeatherBot extends TelegramLongPollingBot {
                     .build());
             }
             else {
-                this.execute(SendMessage.builder().chatId(message.getChatId()).text("Чтобы узнать погоду используйте команду /choose_city").build());
+                this.execute(SendMessage.builder().chatId(message.getChatId()).text("Неизвестная команда. Чтобы узнать список команд введите /help").build());
             }
         }
     }
