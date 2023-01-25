@@ -1,4 +1,4 @@
-package telegram.bot;
+package telegram.bot.forecast;
 
 public enum CityName {
     OMSK("Омск"), MOSCOW("Москва"), SAINT_PETERSBURG("Санкт-Петербург");

@@ -13,5 +13,6 @@ public class Main {
         WeatherBot bot = new WeatherBot(new DefaultBotOptions());
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         telegramBotsApi.registerBot(bot);
+        bot.setMyCommands();
     }
 }

@@ -1,41 +1,39 @@
 package telegram.bot;
 
-import static telegram.bot.CityName.MOSCOW;
-import static telegram.bot.CityName.OMSK;
-import static telegram.bot.CityName.SAINT_PETERSBURG;
-import static telegram.bot.Utils.greetings;
-import static telegram.bot.Utils.isFriendName;
+import static java.util.logging.Level.SEVERE;
+import static telegram.bot.forecast.Buttons.inlineMarkup;
+import static telegram.bot.forecast.Buttons.keyboardRowMarkup;
+import static telegram.bot.forecast.CityName.MOSCOW;
+import static telegram.bot.forecast.CityName.OMSK;
+import static telegram.bot.forecast.CityName.SAINT_PETERSBURG;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Logger;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
+import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands.SetMyCommandsBuilder;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import telegram.bot.commodities.CommoditiesService;
 import telegram.bot.finance.FinanceService;
+import telegram.bot.forecast.Buttons;
 import telegram.bot.forecast.ForecastService;
 
-public class WeatherBot extends TelegramLongPollingBot {
+public class WeatherBot extends TelegramLongPollingBot implements BotCommands {
 
     private static final String TOKEN = "Bot-token";
     private static final String BOT_NAME = "omsk55_weather_bot";
     public static Long currentChatId;
-    List<List<InlineKeyboardButton>> cityButtons = new ArrayList<>();
-    List<List<InlineKeyboardButton>> doneButton = new ArrayList<>();
     ForecastService weather = ForecastService.getInstance();
     FinanceService finance = FinanceService.getInstance();
     CommoditiesService commodities = CommoditiesService.getInstance();
@@ -45,14 +43,18 @@ public class WeatherBot extends TelegramLongPollingBot {
     public WeatherBot(DefaultBotOptions options) {
         super(options);
         Utils.initProperties(property);
-        cityButtons.add(Arrays.asList(
-            InlineKeyboardButton.builder().text(OMSK.getRuCity())
-                .callbackData("В Омске ").build(),
-            InlineKeyboardButton.builder().text(SAINT_PETERSBURG.getRuCity()).
-                callbackData("В Санкт-Петербурге ").build(),
-            InlineKeyboardButton.builder().text(MOSCOW.getRuCity())
-                    .callbackData("В Москве ").build()));
-        doneButton.add(Arrays.asList(InlineKeyboardButton.builder().text("Готово!").build()));
+    }
+
+    public void setMyCommands() {
+        SetMyCommandsBuilder builder = SetMyCommands.builder().commands(LIST_OF_COMMANDS);
+        builder.scope(new BotCommandScopeDefault());
+        builder.languageCode("en");
+        builder.build();
+        try {
+            this.execute(builder.build());
+        } catch (TelegramApiException e) {
+            logger.log(SEVERE, e.getMessage());
+        }
     }
 
     public String getTemp(String city) {
@@ -100,12 +102,12 @@ public class WeatherBot extends TelegramLongPollingBot {
                     case "/start":
                         this.execute(
                             SendMessage.builder().chatId(WeatherBot.currentChatId).text("Здравствуйте, как Вас зовут?")
-                                .build());
+                                .replyMarkup(keyboardRowMarkup()).build());
                         break;
                     case "/forecast":
                         this.execute(SendMessage.builder().chatId(WeatherBot.currentChatId)
                             .text("В каком городе вы хотите узнать погоду?")
-                            .replyMarkup(InlineKeyboardMarkup.builder().keyboard(cityButtons).build()).build());
+                            .replyMarkup(inlineMarkup()).build());
                         break;
                     case "/dollar_exchange_rate":
                         this.execute(SendMessage.builder().chatId(WeatherBot.currentChatId)
@@ -132,7 +134,8 @@ public class WeatherBot extends TelegramLongPollingBot {
                     default:
                         this.execute(
                             SendMessage.builder().chatId(WeatherBot.currentChatId)
-                                .text("Неизвестная команда. Чтобы узнать список команд введите /help")
+                                .text("Неизвестная команда! Чтобы узнать список команд введите /help")
+                                .replyMarkup(Buttons.inlineMarkup())
                                 .build());
                 }
                 logger.info("chatId: " + WeatherBot.currentChatId);
@@ -152,22 +155,44 @@ public class WeatherBot extends TelegramLongPollingBot {
                     .chatId(message.getChatId())
                     .text("Привет Владимир!")
                     .build());
-            } else if (isFriendName(messageLine) != null) {
-                Collections.shuffle(greetings);
-                this.execute(SendMessage
-                    .builder()
-                    .chatId(message.getChatId())
-                    .text(isFriendName(messageLine) + ", " + greetings.get(0).toLowerCase(Locale.ROOT) + " \uD83D\uDE42")
-                    .build());
+            }
+            else if (messageLine.equals("Погода в городе")) {
+                this.execute(SendMessage.builder().chatId(WeatherBot.currentChatId)
+                    .text("В каком городе вы хотите узнать погоду?")
+                    .replyMarkup(inlineMarkup()).build());
+            }
+            else if (messageLine.equals("Курс доллара")) {
+                this.execute(SendMessage.builder().chatId(WeatherBot.currentChatId)
+                    .text("Курс доллара: " + finance.getDollarExchangeRate() + "₽").build());
+            }
+            else if (messageLine.equals("Цена на товары (нефть, газ и тд)")) {
+                this.execute(SendMessage.builder().chatId(WeatherBot.currentChatId)
+                    .text("Цена на нефть и газ: " + commodities.getCommodityPrice("BRENTOIL").intValue() + "$").build());
+            }
+            else if (messageLine.equals("Игра")) {
+                this.execute(SendMessage.builder().chatId(WeatherBot.currentChatId).text("Игра в разработке").build());
+            }
+            else if (messageLine.equals("Помощь")) {
+                this.execute(
+                    SendMessage.builder().chatId(WeatherBot.currentChatId).text("Список команд:\n"
+                        + "/forecast - погода в городе\n"
+                        + "/dollar_exchange_rate - курс доллара\n"
+                        + "/commodities - цена на нефть и газ\n"
+                        + "/game - игра\n"
+                        + "/help - помощь\n"
+                    ).build());
             }
             else {
-                this.execute(SendMessage.builder().chatId(message.getChatId()).text("Неизвестная команда. Чтобы узнать список команд введите /help").build());
+                this.execute(SendMessage.builder().chatId(message.getChatId())
+                    .text("Неизвестный текст сообщения. Чтобы узнать список команд введите /help")
+                    .replyMarkup(Buttons.keyboardRowMarkup()).build());
             }
         }
     }
 
     private void handle(CallbackQuery callbackQuery) throws TelegramApiException {
         Message message = callbackQuery.getMessage();
+        //TODO обрабатывать все кнопки
         String city = callbackQuery.getData();
         switch (city) {
             case "В Омске ":
@@ -180,7 +205,7 @@ public class WeatherBot extends TelegramLongPollingBot {
                 city += getTemp(MOSCOW.toString());
                 break;
             default:
-                city += "Температура неизвестна";
+                city += "Температура неизвестна ";
         }
 
         logger.info("chatId: " + WeatherBot.currentChatId);
