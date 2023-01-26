@@ -1,11 +1,11 @@
 package telegram.bot;
 
 import static java.util.logging.Level.SEVERE;
-import static telegram.bot.forecast.Buttons.inlineMarkup;
-import static telegram.bot.forecast.Buttons.keyboardRowMarkup;
-import static telegram.bot.forecast.CityName.MOSCOW;
-import static telegram.bot.forecast.CityName.OMSK;
-import static telegram.bot.forecast.CityName.SAINT_PETERSBURG;
+import static telegram.bot.Keyboard.keyboardRowMarkup;
+import static telegram.bot.forecast.cities.Buttons.inlineMarkup;
+import static telegram.bot.forecast.cities.CityName.MOSCOW;
+import static telegram.bot.forecast.cities.CityName.OMSK;
+import static telegram.bot.forecast.cities.CityName.SAINT_PETERSBURG;
 
 import java.util.Locale;
 import java.util.Optional;
@@ -26,7 +26,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import telegram.bot.commodities.CommoditiesService;
 import telegram.bot.finance.FinanceService;
-import telegram.bot.forecast.Buttons;
+import telegram.bot.forecast.cities.Buttons;
 import telegram.bot.forecast.ForecastService;
 
 public class WeatherBot extends TelegramLongPollingBot implements BotCommands {
@@ -43,6 +43,7 @@ public class WeatherBot extends TelegramLongPollingBot implements BotCommands {
     public WeatherBot(DefaultBotOptions options) {
         super(options);
         Utils.initProperties(property);
+        this.setMyCommands();
     }
 
     public void setMyCommands() {
@@ -58,7 +59,7 @@ public class WeatherBot extends TelegramLongPollingBot implements BotCommands {
     }
 
     public String getTemp(String city) {
-        return String.valueOf(weather.getTemp(city));
+        return weather.getTemp(city) + "°";
     }
 
     @Override
@@ -101,7 +102,7 @@ public class WeatherBot extends TelegramLongPollingBot implements BotCommands {
                 switch (command) {
                     case "/start":
                         this.execute(
-                            SendMessage.builder().chatId(WeatherBot.currentChatId).text("Здравствуйте, как Вас зовут?")
+                            SendMessage.builder().chatId(WeatherBot.currentChatId).text("Здравствуйте " + message.getFrom().getFirstName())
                                 .replyMarkup(keyboardRowMarkup()).build());
                         break;
                     case "/forecast":
@@ -185,7 +186,7 @@ public class WeatherBot extends TelegramLongPollingBot implements BotCommands {
             else {
                 this.execute(SendMessage.builder().chatId(message.getChatId())
                     .text("Неизвестный текст сообщения. Чтобы узнать список команд введите /help")
-                    .replyMarkup(Buttons.keyboardRowMarkup()).build());
+                    .replyMarkup(keyboardRowMarkup()).build());
             }
         }
     }

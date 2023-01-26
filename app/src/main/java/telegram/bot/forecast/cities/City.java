@@ -1,4 +1,4 @@
-package telegram.bot.forecast;
+package telegram.bot.forecast.cities;
 
 import java.util.HashMap;
 

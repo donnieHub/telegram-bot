@@ -10,6 +10,8 @@ import java.util.Properties;
 import telegram.bot.Utils;
 import telegram.bot.client.MyHttpClient;
 import telegram.bot.client.Property;
+import telegram.bot.forecast.cities.City;
+import telegram.bot.forecast.cities.CityName;
 import telegram.bot.forecast.yandex.json.YandexWeatherResponse;
 
 public class ForecastYandex implements ForecastService, Property {
