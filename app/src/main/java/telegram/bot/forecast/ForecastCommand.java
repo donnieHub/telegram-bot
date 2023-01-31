@@ -1,7 +1,5 @@
 package telegram.bot.forecast;
 
-import static telegram.bot.forecast.cities.Buttons.inlineMarkup;
-
 import java.util.logging.Logger;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
@@ -14,13 +12,14 @@ public class ForecastCommand extends BotCommand implements Sendable {
     SendMessage message;
     String messageText = "*В каком городе вы хотите узнать погоду?*";
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    CityButtons buttons = new CityButtons();
 
     public void sendAnswer(AbsSender absSender, Long chatId) {
         message = new SendMessage();
         message.enableMarkdown(true);
         message.setChatId(chatId.toString());
         message.setText(messageText);
-        message.setReplyMarkup(inlineMarkup());
+        message.setReplyMarkup(buttons.display());
         try {
             user = absSender.getMe().getFirstName();
             absSender.execute(message);

@@ -25,6 +25,7 @@ public class Commodities implements CommoditiesService, Property {
 
 	public static void main(String[] args) {
 		Commodities app = new Commodities();
+		// TODO добавить товары
 		Double price = app.getCommodityPrice("BRENTOIL");
 		System.out.println("Цена: " + price);
 	}

@@ -29,7 +29,6 @@ import telegram.bot.commodities.CommoditiesCommand;
 import telegram.bot.commodities.CommoditiesService;
 import telegram.bot.finance.FinanceCommand;
 import telegram.bot.forecast.ForecastCommand;
-import telegram.bot.forecast.cities.Buttons;
 import telegram.bot.forecast.ForecastService;
 
 public class WeatherBot extends TelegramLongPollingBot {
@@ -133,7 +132,6 @@ public class WeatherBot extends TelegramLongPollingBot {
                         this.execute(
                             SendMessage.builder().chatId(currentChatId)
                                 .text("Неизвестная команда! Чтобы узнать список команд введите /help")
-                                .replyMarkup(Buttons.inlineMarkup())
                                 .build());
                 }
                 logger.info("chatId: " + currentChatId);
@@ -195,7 +193,7 @@ public class WeatherBot extends TelegramLongPollingBot {
                 city += getTemp(MOSCOW.toString());
                 break;
             default:
-                city += "Температура неизвестна ";
+                city += "Неизвестная команда ";
         }
 
         logger.info("chatId: " + currentChatId);

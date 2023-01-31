@@ -1,7 +1,5 @@
 package telegram.bot.finance;
 
-import static telegram.bot.forecast.cities.Buttons.inlineMarkup;
-
 import java.util.logging.Logger;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
