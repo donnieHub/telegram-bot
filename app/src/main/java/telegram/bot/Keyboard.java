@@ -13,7 +13,6 @@ public class Keyboard {
         row.add("Погода в городе");
         row.add("Курс доллара");
         row.add("Цена на товары \n(нефть, газ и тд)");
-        row.add("Игра");
         row.add("Помощь");
         keyboardRow.clear();
         keyboardRow.add(row);
