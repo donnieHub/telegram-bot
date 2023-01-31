@@ -18,6 +18,7 @@ public class CommoditiesCommand extends BotCommand implements Sendable {
         message = new SendMessage();
         message.enableMarkdown(true);
         message.setChatId(chatId.toString());
+        //TODO добавить кэширование
         message.setText("*Цена на нефть и газ: " + commodities.getCommodityPrice(commoditiesType).intValue() + "$*");
         try {
             user = absSender.getMe().getFirstName();

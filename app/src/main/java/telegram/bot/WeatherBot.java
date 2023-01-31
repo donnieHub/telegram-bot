@@ -2,7 +2,6 @@ package telegram.bot;
 
 import static java.util.logging.Level.SEVERE;
 import static telegram.bot.Keyboard.keyboardRowMarkup;
-import static telegram.bot.forecast.cities.Buttons.inlineMarkup;
 import static telegram.bot.forecast.cities.CityName.MOSCOW;
 import static telegram.bot.forecast.cities.CityName.OMSK;
 import static telegram.bot.forecast.cities.CityName.SAINT_PETERSBURG;
@@ -29,7 +28,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import telegram.bot.commodities.CommoditiesCommand;
 import telegram.bot.commodities.CommoditiesService;
 import telegram.bot.finance.FinanceCommand;
-import telegram.bot.finance.FinanceService;
 import telegram.bot.forecast.ForecastCommand;
 import telegram.bot.forecast.cities.Buttons;
 import telegram.bot.forecast.ForecastService;
@@ -122,17 +120,12 @@ public class WeatherBot extends TelegramLongPollingBot {
                     case "/commodities":
                         commoditiesCommand.sendAnswer(this, currentChatId);
                         break;
-                    case "/game":
-                        this.execute(
-                            SendMessage.builder().chatId(currentChatId).text("Игра в разработке").build());
-                        break;
                     case "/help":
                         this.execute(
                             SendMessage.builder().chatId(currentChatId).text("Список команд:\n"
                                 + "/forecast - погода в городе\n"
                                 + "/dollar_exchange_rate - курс доллара\n"
                                 + "/commodities - цена на нефть и газ\n"
-                                + "/game - игра\n"
                                 + "/help - помощь\n"
                             ).build());
                         break;
@@ -170,16 +163,12 @@ public class WeatherBot extends TelegramLongPollingBot {
             else if (messageLine.equals("Цена на товары \n(нефть, газ и тд)")) {
                 commoditiesCommand.sendAnswer(this, currentChatId);
             }
-            else if (messageLine.equals("Игра")) {
-                this.execute(SendMessage.builder().chatId(currentChatId).text("Игра в разработке").build());
-            }
             else if (messageLine.equals("Помощь")) {
                 this.execute(
                     SendMessage.builder().chatId(currentChatId).text("Список команд:\n"
                         + "/forecast - погода в городе\n"
                         + "/dollar_exchange_rate - курс доллара\n"
                         + "/commodities - цена на нефть и газ\n"
-                        + "/game - игра\n"
                         + "/help - помощь\n"
                     ).build());
             }
