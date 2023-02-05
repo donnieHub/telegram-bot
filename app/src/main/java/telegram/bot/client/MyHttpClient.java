@@ -1,15 +1,18 @@
 package telegram.bot.client;
 
+import static java.time.Duration.ofMinutes;
+
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
+import java.util.Optional;
 
 public class MyHttpClient {
 
     private String uri;
     private String apiKey;
+    private static final String JSON_CONTENT_TYPE = "application/json";
 
     public MyHttpClient(String uri, String apiKey) {
         this.uri = uri;
@@ -25,7 +28,7 @@ public class MyHttpClient {
         return uri.toString();
     }
 
-    public HttpClient createClient() {
+    public <T> HttpClient createClient() {
         HttpClient client = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_2)
             .build();
@@ -35,9 +38,8 @@ public class MyHttpClient {
     public HttpRequest createGetRequest(String uri) {
         HttpRequest request = HttpRequest.newBuilder()
             .uri(java.net.URI.create(uri))
-            .timeout(Duration.ofMinutes(1))
-            .header("Content-Type", "application/json")
-            //.header("X-Yandex-API-Key", getApiKeyFromPropertyFile())
+            .timeout(ofMinutes(1))
+            .header("Content-Type", JSON_CONTENT_TYPE)
             .GET()
             .build();
         return request;
@@ -46,18 +48,22 @@ public class MyHttpClient {
     public HttpRequest createGetRequest(String uri, String headerName, String headerValue) {
         HttpRequest request = HttpRequest.newBuilder()
             .uri(java.net.URI.create(uri))
-            .timeout(Duration.ofMinutes(1))
-            .header("Content-Type", "application/json")
+            .timeout(ofMinutes(1))
+            .header("Content-Type", JSON_CONTENT_TYPE)
             .header(headerName, headerValue)
             .GET()
             .build();
         return request;
     }
 
-    public <T> HttpResponse<T> getApiResponse(HttpClient client, HttpRequest request) throws IOException, InterruptedException {
-        HttpResponse<T> response =
-            (HttpResponse<T>) client.send(request, HttpResponse.BodyHandlers.ofString());
-        return response;
+    public <T> Optional<HttpResponse<T>> getApiResponse(HttpClient client, HttpRequest request) {
+        try {
+            HttpResponse<T> response = (HttpResponse<T>) client.send(request, HttpResponse.BodyHandlers.ofString());
+            return Optional.of(response);
+        } catch (IOException | InterruptedException e) {
+            System.err.println("Error sending request to " + uri + ": " + e.getMessage());
+            return Optional.empty();
+        }
     }
 
 }

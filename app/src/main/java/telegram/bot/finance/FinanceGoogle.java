@@ -2,9 +2,9 @@ package telegram.bot.finance;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Optional;
 import java.util.Properties;
 import telegram.bot.Utils;
 import telegram.bot.client.MyHttpClient;
@@ -34,15 +34,10 @@ public class FinanceGoogle implements FinanceService, Property {
 	public Double getDollarExchangeRate() {
 		HttpRequest request = myHttpClient.createGetRequest(myHttpClient.createURI(
 			getUriFromPropertyFile() + "?engine=google_finance&q=USD-Rub&api_key=" + getApiKeyFromPropertyFile()));
-		HttpResponse<String> response = null;
-		try {
-			response = myHttpClient.getApiResponse(myHttpClient.createClient(), request);
-		} catch (IOException | InterruptedException e) {
-			e.printStackTrace();
-		}
+		Optional<HttpResponse<String>> response = myHttpClient.getApiResponse(myHttpClient.createClient(), request);
 		GsonBuilder builder = new GsonBuilder();
 		Gson gson = builder.create();
-		String json = response.body();
+		String json = response.get().body();
 		UsdToRub responseJson = gson.fromJson(json, UsdToRub.class);
 		return responseJson.getSummary().getExtractedPrice();
 	}
