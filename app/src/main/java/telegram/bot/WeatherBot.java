@@ -1,7 +1,6 @@
 package telegram.bot;
 
 import static java.util.logging.Level.SEVERE;
-import static telegram.bot.Keyboard.keyboardRowMarkup;
 import static telegram.bot.forecast.cities.CityName.MOSCOW;
 import static telegram.bot.forecast.cities.CityName.OMSK;
 import static telegram.bot.forecast.cities.CityName.SAINT_PETERSBURG;
@@ -37,7 +36,6 @@ public class WeatherBot extends TelegramLongPollingBot {
     private static final String BOT_NAME = "omsk55_weather_bot";
     public static Long currentChatId;
     ForecastService weather = ForecastService.getInstance();
-    CommoditiesService commodities = CommoditiesService.getInstance();
     Sendable forecastCommand = new ForecastCommand();
     Sendable financeCommand = new FinanceCommand();
     Sendable commoditiesCommand = new CommoditiesCommand();
@@ -108,7 +106,7 @@ public class WeatherBot extends TelegramLongPollingBot {
                     case "/start":
                         this.execute(
                             SendMessage.builder().chatId(currentChatId).text("Здравствуйте " + message.getFrom().getFirstName())
-                                .replyMarkup(keyboardRowMarkup()).build());
+                                .replyMarkup(new Keyboard().getKeyboardRowMarkup()).build());
                         break;
                     case "/forecast":
                         forecastCommand.sendAnswer(this, currentChatId);
@@ -173,7 +171,7 @@ public class WeatherBot extends TelegramLongPollingBot {
             else {
                 this.execute(SendMessage.builder().chatId(message.getChatId())
                     .text("Неизвестный текст сообщения. Чтобы узнать список команд введите /help")
-                    .replyMarkup(keyboardRowMarkup()).build());
+                    .replyMarkup(new Keyboard().getKeyboardRowMarkup()).build());
             }
         }
     }

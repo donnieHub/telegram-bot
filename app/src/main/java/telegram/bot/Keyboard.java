@@ -1,24 +1,34 @@
 package telegram.bot;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 public class Keyboard {
-    private static final List<KeyboardRow> keyboardRow = new ArrayList<>();
+    private static final String WEATHER_BTN_TEXT = "Погода в городе";
+    private static final String DOLLAR_PRICE_BTN_TEXT = "Курс доллара";
+    private static final String OIL_PRICE_BTN_TEXT = "Цена на товары \n(нефть, газ и тд)";
+    private static final String HELP_BTN_TEXT = "Помощь";
 
-    public static ReplyKeyboardMarkup keyboardRowMarkup() {
-        KeyboardRow row = new KeyboardRow();
-        row.add("Погода в городе");
-        row.add("Курс доллара");
-        row.add("Цена на товары \n(нефть, газ и тд)");
-        row.add("Помощь");
-        keyboardRow.clear();
-        keyboardRow.add(row);
+    private static final List<KeyboardRow> KEYBOARD_ROWS = Arrays.asList(
+        createKeyboardRow(WEATHER_BTN_TEXT),
+        createKeyboardRow(DOLLAR_PRICE_BTN_TEXT),
+        createKeyboardRow(OIL_PRICE_BTN_TEXT),
+        createKeyboardRow(HELP_BTN_TEXT)
+    );
+
+    public ReplyKeyboardMarkup getKeyboardRowMarkup() {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setResizeKeyboard(true);
-        replyKeyboardMarkup.setKeyboard(keyboardRow);
+        replyKeyboardMarkup.setKeyboard(KEYBOARD_ROWS);
         return replyKeyboardMarkup;
+    }
+
+    private static KeyboardRow createKeyboardRow(String buttonText) {
+        KeyboardRow row = new KeyboardRow();
+        row.add(new KeyboardButton(buttonText));
+        return row;
     }
 }
