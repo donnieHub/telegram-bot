@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import telegram.bot.Sendable;
 
 public class CommoditiesCommand extends BotCommand implements Sendable {
+    public final static String command = "/commodities";
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     String user;
     SendMessage message;
@@ -19,7 +20,7 @@ public class CommoditiesCommand extends BotCommand implements Sendable {
         message.enableMarkdown(true);
         message.setChatId(chatId.toString());
         //TODO добавить кэширование
-        message.setText("*Цена на нефть и газ: " + commodities.getCommodityPrice(commoditiesType).intValue() + "$*");
+        message.setText("Цена на нефть и газ: " + commodities.getCommodityPrice(commoditiesType).intValue() + "$");
         try {
             user = absSender.getMe().getFirstName();
             absSender.execute(message);

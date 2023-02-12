@@ -1,4 +1,4 @@
-package telegram.bot.finance;
+package telegram.bot.help;
 
 import java.util.logging.Logger;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -6,19 +6,26 @@ import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import telegram.bot.Sendable;
+import telegram.bot.commodities.CommoditiesCommand;
+import telegram.bot.finance.FinanceCommand;
+import telegram.bot.forecast.ForecastCommand;
 
-public class FinanceCommand extends BotCommand implements Sendable {
-    public final static String command = "/dollar_exchange_rate";
+public class HelpCommand extends BotCommand implements Sendable {
+
+    public final static String command = "/help";
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     String user;
     SendMessage message;
-    FinanceService finance = FinanceService.getInstance();
 
     public void sendAnswer(AbsSender absSender, Long chatId) {
         message = new SendMessage();
         message.enableMarkdown(true);
         message.setChatId(chatId.toString());
-        message.setText("*Курс доллара: " + finance.getDollarExchangeRate() + "₽*");
+        message.setText("Список команд:\n"
+            + ForecastCommand.command + " - погода в городе.\n"
+            + FinanceCommand.command + " - курс доллара.\n"
+            + CommoditiesCommand.command + " - цена на нефть и газ.\n"
+            + HelpCommand.command + " - помощь.\n");
         try {
             user = absSender.getMe().getFirstName();
             absSender.execute(message);

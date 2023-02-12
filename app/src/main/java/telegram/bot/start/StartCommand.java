@@ -1,24 +1,28 @@
-package telegram.bot.finance;
+package telegram.bot.start;
 
 import java.util.logging.Logger;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import telegram.bot.Keyboard;
 import telegram.bot.Sendable;
+import telegram.bot.commodities.CommoditiesCommand;
+import telegram.bot.finance.FinanceCommand;
+import telegram.bot.forecast.ForecastCommand;
 
-public class FinanceCommand extends BotCommand implements Sendable {
-    public final static String command = "/dollar_exchange_rate";
+public class StartCommand extends BotCommand implements Sendable {
+
+    public final static String command = "/start";
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     String user;
     SendMessage message;
-    FinanceService finance = FinanceService.getInstance();
 
     public void sendAnswer(AbsSender absSender, Long chatId) {
         message = new SendMessage();
-        message.enableMarkdown(true);
         message.setChatId(chatId.toString());
-        message.setText("*Курс доллара: " + finance.getDollarExchangeRate() + "₽*");
+        message.setText("Здравствуйте!");
+        message.setReplyMarkup(new Keyboard().getKeyboardRowMarkup());
         try {
             user = absSender.getMe().getFirstName();
             absSender.execute(message);

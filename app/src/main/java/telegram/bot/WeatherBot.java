@@ -25,10 +25,11 @@ import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScope
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import telegram.bot.commodities.CommoditiesCommand;
-import telegram.bot.commodities.CommoditiesService;
 import telegram.bot.finance.FinanceCommand;
 import telegram.bot.forecast.ForecastCommand;
 import telegram.bot.forecast.ForecastService;
+import telegram.bot.help.HelpCommand;
+import telegram.bot.start.StartCommand;
 
 public class WeatherBot extends TelegramLongPollingBot {
 
@@ -39,6 +40,8 @@ public class WeatherBot extends TelegramLongPollingBot {
     Sendable forecastCommand = new ForecastCommand();
     Sendable financeCommand = new FinanceCommand();
     Sendable commoditiesCommand = new CommoditiesCommand();
+    Sendable helpCommand = new HelpCommand();
+    Sendable startCommand = new StartCommand();
     Properties property = new Properties();
     List<BotCommand> LIST_OF_COMMANDS = List.of(new BotCommand("/help", "Помощь"));
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -103,28 +106,20 @@ public class WeatherBot extends TelegramLongPollingBot {
             if (commandEntity.isPresent()) {
                 String command = commandEntity.get().getText();
                 switch (command) {
-                    case "/start":
-                        this.execute(
-                            SendMessage.builder().chatId(currentChatId).text("Здравствуйте " + message.getFrom().getFirstName())
-                                .replyMarkup(new Keyboard().getKeyboardRowMarkup()).build());
+                    case StartCommand.command:
+                        startCommand.sendAnswer(this, currentChatId);
                         break;
-                    case "/forecast":
+                    case ForecastCommand.command:
                         forecastCommand.sendAnswer(this, currentChatId);
                         break;
-                    case "/dollar_exchange_rate":
+                    case FinanceCommand.command:
                         financeCommand.sendAnswer(this, currentChatId);
                         break;
-                    case "/commodities":
+                    case CommoditiesCommand.command:
                         commoditiesCommand.sendAnswer(this, currentChatId);
                         break;
-                    case "/help":
-                        this.execute(
-                            SendMessage.builder().chatId(currentChatId).text("Список команд:\n"
-                                + "/forecast - погода в городе\n"
-                                + "/dollar_exchange_rate - курс доллара\n"
-                                + "/commodities - цена на нефть и газ\n"
-                                + "/help - помощь\n"
-                            ).build());
+                    case HelpCommand.command:
+                        helpCommand.sendAnswer(this, currentChatId);
                         break;
                     default:
                         this.execute(

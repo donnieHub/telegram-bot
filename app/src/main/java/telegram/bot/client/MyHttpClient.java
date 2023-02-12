@@ -3,6 +3,7 @@ package telegram.bot.client;
 import static java.time.Duration.ofMinutes;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -36,21 +37,14 @@ public class MyHttpClient {
     }
 
     public HttpRequest createGetRequest(String uri) {
-        HttpRequest request = HttpRequest.newBuilder()
-            .uri(java.net.URI.create(uri))
-            .timeout(ofMinutes(1))
-            .header("Content-Type", JSON_CONTENT_TYPE)
-            .GET()
-            .build();
-        return request;
+        return createGetRequest(uri, "Content-Type", JSON_CONTENT_TYPE);
     }
 
-    public HttpRequest createGetRequest(String uri, String headerName, String headerValue) {
+    public HttpRequest createGetRequest(String uri, String... headerValue) {
         HttpRequest request = HttpRequest.newBuilder()
-            .uri(java.net.URI.create(uri))
+            .uri(URI.create(uri))
             .timeout(ofMinutes(1))
-            .header("Content-Type", JSON_CONTENT_TYPE)
-            .header(headerName, headerValue)
+            .headers(headerValue)
             .GET()
             .build();
         return request;
