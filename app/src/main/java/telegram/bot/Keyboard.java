@@ -15,7 +15,7 @@ public class Keyboard {
     private static final List<KeyboardRow> KEYBOARD_ROWS = Arrays.asList(
         createKeyboardRow(WEATHER_BTN_TEXT),
         createKeyboardRow(DOLLAR_PRICE_BTN_TEXT),
-        createKeyboardRow(OIL_PRICE_BTN_TEXT),
+        //createKeyboardRow(OIL_PRICE_BTN_TEXT),
         createKeyboardRow(HELP_BTN_TEXT)
     );
 

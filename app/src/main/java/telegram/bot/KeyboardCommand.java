@@ -1,19 +1,16 @@
-package telegram.bot.help;
+package telegram.bot;
 
 import java.util.logging.Logger;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import telegram.bot.KeyboardCommand;
-import telegram.bot.Sendable;
-import telegram.bot.commodities.CommoditiesCommand;
 import telegram.bot.finance.FinanceCommand;
 import telegram.bot.forecast.ForecastCommand;
 
-public class HelpCommand extends BotCommand implements Sendable {
+public class KeyboardCommand extends BotCommand implements Sendable {
 
-    public final static String command = "/help";
+    public final static String command = "/showKeyboard";
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     String user;
     SendMessage message;
@@ -22,12 +19,8 @@ public class HelpCommand extends BotCommand implements Sendable {
         message = new SendMessage();
         message.enableMarkdown(true);
         message.setChatId(chatId.toString());
-        message.setText("Список команд:\n"
-            + ForecastCommand.command + " - погода в городе.\n"
-            + FinanceCommand.command + " - курс доллара.\n"
-            //+ CommoditiesCommand.command + " - цена на нефть и газ.\n"
-            + KeyboardCommand.command + "- показать кнопки.\n"
-            + HelpCommand.command + " - помощь.\n");
+        message.setReplyMarkup(new Keyboard().getKeyboardRowMarkup());
+        message.setText("Кнопки:");
         try {
             user = absSender.getMe().getFirstName();
             absSender.execute(message);

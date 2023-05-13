@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import telegram.bot.Sendable;
 
 public class FinanceCommand extends BotCommand implements Sendable {
-    public final static String command = "/dollar_exchange_rate";
+    public final static String command = "/dollarExchangeRate";
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     String user;
     SendMessage message;

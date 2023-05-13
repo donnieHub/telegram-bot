@@ -40,6 +40,7 @@ public class WeatherBot extends TelegramLongPollingBot {
     Sendable forecastCommand = new ForecastCommand();
     Sendable financeCommand = new FinanceCommand();
     Sendable commoditiesCommand = new CommoditiesCommand();
+    Sendable keyboardCommand = new KeyboardCommand();
     Sendable helpCommand = new HelpCommand();
     Sendable startCommand = new StartCommand();
     Properties property = new Properties();
@@ -62,10 +63,6 @@ public class WeatherBot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             logger.log(SEVERE, e.getMessage());
         }
-    }
-
-    public String getTemp(String city) {
-        return weather.getTemp(city) + "°";
     }
 
     @Override
@@ -115,8 +112,11 @@ public class WeatherBot extends TelegramLongPollingBot {
                     case FinanceCommand.command:
                         financeCommand.sendAnswer(this, currentChatId);
                         break;
-                    case CommoditiesCommand.command:
-                        commoditiesCommand.sendAnswer(this, currentChatId);
+//                    case CommoditiesCommand.command:
+//                        commoditiesCommand.sendAnswer(this, currentChatId);
+//                        break;
+                    case KeyboardCommand.command:
+                        keyboardCommand.sendAnswer(this, currentChatId);
                         break;
                     case HelpCommand.command:
                         helpCommand.sendAnswer(this, currentChatId);
@@ -151,15 +151,15 @@ public class WeatherBot extends TelegramLongPollingBot {
             else if (messageLine.equals("Курс доллара")) {
                 financeCommand.sendAnswer(this, currentChatId);
             }
-            else if (messageLine.equals("Цена на товары \n(нефть, газ и тд)")) {
-                commoditiesCommand.sendAnswer(this, currentChatId);
-            }
+//            else if (messageLine.equals("Цена на товары \n(нефть, газ и тд)")) {
+//                commoditiesCommand.sendAnswer(this, currentChatId);
+//            }
             else if (messageLine.equals("Помощь")) {
                 this.execute(
                     SendMessage.builder().chatId(currentChatId).text("Список команд:\n"
                         + "/forecast - погода в городе\n"
                         + "/dollar_exchange_rate - курс доллара\n"
-                        + "/commodities - цена на нефть и газ\n"
+                        //+ "/commodities - цена на нефть и газ\n"
                         + "/help - помощь\n"
                     ).build());
             }
@@ -177,13 +177,13 @@ public class WeatherBot extends TelegramLongPollingBot {
         String city = callbackQuery.getData();
         switch (city) {
             case "В Омске ":
-                city += getTemp(OMSK.toString());
+                city += weather.getTemp(OMSK.toString());
                 break;
             case "В Санкт-Петербурге ":
-                city += getTemp(SAINT_PETERSBURG.toString());
+                city += weather.getTemp(SAINT_PETERSBURG.toString());
                 break;
             case "В Москве ":
-                city += getTemp(MOSCOW.toString());
+                city += weather.getTemp(MOSCOW.toString());
                 break;
             default:
                 city += "Неизвестная команда ";

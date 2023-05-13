@@ -1,33 +1,26 @@
-package telegram.bot.help;
+package telegram.bot.forecast;
 
 import java.util.logging.Logger;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import telegram.bot.KeyboardCommand;
 import telegram.bot.Sendable;
-import telegram.bot.commodities.CommoditiesCommand;
-import telegram.bot.finance.FinanceCommand;
-import telegram.bot.forecast.ForecastCommand;
 
-public class HelpCommand extends BotCommand implements Sendable {
-
-    public final static String command = "/help";
-    Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+public class ForecastMessage extends BotCommand implements Sendable {
+    public final static String command = "/forecast";
+    public final static String messageText = "*В каком городе вы хотите узнать погоду?*";
     String user;
     SendMessage message;
+    Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    CityButtons buttons = new CityButtons();
 
     public void sendAnswer(AbsSender absSender, Long chatId) {
         message = new SendMessage();
         message.enableMarkdown(true);
         message.setChatId(chatId.toString());
-        message.setText("Список команд:\n"
-            + ForecastCommand.command + " - погода в городе.\n"
-            + FinanceCommand.command + " - курс доллара.\n"
-            //+ CommoditiesCommand.command + " - цена на нефть и газ.\n"
-            + KeyboardCommand.command + "- показать кнопки.\n"
-            + HelpCommand.command + " - помощь.\n");
+        message.setText(messageText);
+        message.setReplyMarkup(buttons.display());
         try {
             user = absSender.getMe().getFirstName();
             absSender.execute(message);
