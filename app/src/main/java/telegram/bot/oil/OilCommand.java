@@ -1,33 +1,25 @@
-package telegram.bot.help;
+package telegram.bot.oil;
 
 import java.util.logging.Logger;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import telegram.bot.KeyboardCommand;
 import telegram.bot.Sendable;
-import telegram.bot.finance.FinanceCommand;
-import telegram.bot.forecast.ForecastCommand;
-import telegram.bot.oil.OilCommand;
+import telegram.bot.browser.YandexMain;
 
-public class HelpCommand extends BotCommand implements Sendable {
-
-    public final static String command = "/help";
+public class OilCommand extends BotCommand implements Sendable {
+    public final static String command = "/oil";
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     String user;
     SendMessage message;
+    OilService commodities = OilService.getInstance();
 
     public void sendAnswer(AbsSender absSender, Long chatId) {
         message = new SendMessage();
         message.enableMarkdown(true);
         message.setChatId(chatId.toString());
-        message.setText("Список команд:\n"
-            + ForecastCommand.command + " - погода в городе.\n"
-            + FinanceCommand.command + " - курс доллара.\n"
-            + OilCommand.command + " - цена на нефть.\n"
-            + KeyboardCommand.command + "- показать кнопки.\n"
-            + HelpCommand.command + " - помощь.\n");
+        message.setText("Цена на нефть: " + commodities.getOilPrice(YandexMain.fileName));
         try {
             user = absSender.getMe().getFirstName();
             absSender.execute(message);

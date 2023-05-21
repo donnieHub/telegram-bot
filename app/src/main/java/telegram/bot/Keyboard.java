@@ -9,13 +9,13 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 public class Keyboard {
     private static final String WEATHER_BTN_TEXT = "Погода в городе";
     private static final String DOLLAR_PRICE_BTN_TEXT = "Курс доллара";
-    private static final String OIL_PRICE_BTN_TEXT = "Цена на товары \n(нефть, газ и тд)";
+    private static final String OIL_PRICE_BTN_TEXT = "Цена на нефть";
     private static final String HELP_BTN_TEXT = "Помощь";
 
     private static final List<KeyboardRow> KEYBOARD_ROWS = Arrays.asList(
         createKeyboardRow(WEATHER_BTN_TEXT),
         createKeyboardRow(DOLLAR_PRICE_BTN_TEXT),
-        //createKeyboardRow(OIL_PRICE_BTN_TEXT),
+        createKeyboardRow(OIL_PRICE_BTN_TEXT),
         createKeyboardRow(HELP_BTN_TEXT)
     );
 

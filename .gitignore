@@ -5,4 +5,4 @@
 build
 
 # Ignore properties like token, etc
-app/src/main/resources/secret.properties
+app/src/yandexMain/resources/secret.properties

@@ -24,11 +24,11 @@ import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import telegram.bot.commodities.CommoditiesCommand;
 import telegram.bot.finance.FinanceCommand;
 import telegram.bot.forecast.ForecastCommand;
 import telegram.bot.forecast.ForecastService;
 import telegram.bot.help.HelpCommand;
+import telegram.bot.oil.OilCommand;
 import telegram.bot.start.StartCommand;
 
 public class WeatherBot extends TelegramLongPollingBot {
@@ -39,7 +39,7 @@ public class WeatherBot extends TelegramLongPollingBot {
     ForecastService weather = ForecastService.getInstance();
     Sendable forecastCommand = new ForecastCommand();
     Sendable financeCommand = new FinanceCommand();
-    Sendable commoditiesCommand = new CommoditiesCommand();
+    Sendable oilCommand = new OilCommand();
     Sendable keyboardCommand = new KeyboardCommand();
     Sendable helpCommand = new HelpCommand();
     Sendable startCommand = new StartCommand();
@@ -112,9 +112,9 @@ public class WeatherBot extends TelegramLongPollingBot {
                     case FinanceCommand.command:
                         financeCommand.sendAnswer(this, currentChatId);
                         break;
-//                    case CommoditiesCommand.command:
-//                        commoditiesCommand.sendAnswer(this, currentChatId);
-//                        break;
+                    case OilCommand.command:
+                        oilCommand.sendAnswer(this, currentChatId);
+                        break;
                     case KeyboardCommand.command:
                         keyboardCommand.sendAnswer(this, currentChatId);
                         break;
@@ -151,15 +151,15 @@ public class WeatherBot extends TelegramLongPollingBot {
             else if (messageLine.equals("Курс доллара")) {
                 financeCommand.sendAnswer(this, currentChatId);
             }
-//            else if (messageLine.equals("Цена на товары \n(нефть, газ и тд)")) {
-//                commoditiesCommand.sendAnswer(this, currentChatId);
-//            }
+            else if (messageLine.equals("Цена на нефть")) {
+                oilCommand.sendAnswer(this, currentChatId);
+            }
             else if (messageLine.equals("Помощь")) {
                 this.execute(
                     SendMessage.builder().chatId(currentChatId).text("Список команд:\n"
                         + "/forecast - погода в городе\n"
                         + "/dollar_exchange_rate - курс доллара\n"
-                        //+ "/commodities - цена на нефть и газ\n"
+                        + "/oil - цена на нефть\n"
                         + "/help - помощь\n"
                     ).build());
             }

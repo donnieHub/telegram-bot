@@ -9,6 +9,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.codeborne:selenide:6.14.1'
     implementation 'org.telegram:telegrambots:6.3.0'
     implementation 'com.google.guava:guava:30.1-jre'
     implementation 'com.google.code.gson:gson:2.10'
