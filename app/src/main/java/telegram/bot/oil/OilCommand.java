@@ -13,13 +13,13 @@ public class OilCommand extends BotCommand implements Sendable {
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     String user;
     SendMessage message;
-    OilService commodities = OilService.getInstance();
+    OilService oilService = OilService.getInstance();
 
     public void sendAnswer(AbsSender absSender, Long chatId) {
         message = new SendMessage();
         message.enableMarkdown(true);
         message.setChatId(chatId.toString());
-        message.setText("Цена на нефть: " + commodities.getOilPrice(YandexMain.fileName));
+        message.setText("Цена на нефть: " + oilService.getOilPrice(YandexMain.fileName));
         try {
             user = absSender.getMe().getFirstName();
             absSender.execute(message);

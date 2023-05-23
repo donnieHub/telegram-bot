@@ -13,9 +13,11 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class YandexMain {
 
+    Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     final String url = "https://dzen.ru/";
     public final static String fileName = "YandexMaindata.txt";
     Data data = new Data();
@@ -48,6 +50,7 @@ public class YandexMain {
 
     public BigDecimal getData(SelenideElement element) {
         String text = element.$("span[class^='currency-rates__itemValue']").getText();
+        logger.info("getData: " + text);
         return new BigDecimal(text.replaceAll("[^\\d,]", "").replace(',', '.'));
     }
 
@@ -55,6 +58,7 @@ public class YandexMain {
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName, false))) {
             writer.println(data);
         } catch (IOException e) {
+            logger.info("saveData: " + data);
             e.printStackTrace();
         }
     }
