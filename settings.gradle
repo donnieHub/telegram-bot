@@ -9,5 +9,5 @@
 
 rootProject.name = 'telegram-bot'
 include('app')
-include(':browser')
+include('weather')
 
