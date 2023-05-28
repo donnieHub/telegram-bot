@@ -1,5 +1,3 @@
-package telegram.bot.browser;
-
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
@@ -11,31 +9,26 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class YandexMain {
 
-    Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    final String url = "https://dzen.ru/";
-    public final static String fileName = "YandexMaindata.txt";
+    final URL url = new URL("https://dzen.ru/");
+    final static String fileName = "YandexMaindata.txt";
     Data data = new Data();
 
-    public YandexMain() {
+    public YandexMain() throws MalformedURLException {
     }
 
     public static void main(String[] args) throws MalformedURLException {
         YandexMain yandexMain = new YandexMain();
-        yandexMain.savePricesFromBrowser();
+        yandexMain.saveYandexData();
     }
 
-    public void savePricesFromBrowser() {
+    public void saveYandexData() {
         Configuration.headless = true;
-        Configuration.webdriverLogsEnabled = true;
-        System.setProperty("webdriver.chrome.logfile", "./chromedriver.log");
-        System.setProperty("webdriver.chrome.verboseLogging", "true");
-        System.setProperty("chromeoptions.args", "--disable-dev-shm-usage");
         open(url);
         SelenideElement container = $("article.currency-rates__container-3P");
         container.shouldBe(visible);
@@ -54,7 +47,6 @@ public class YandexMain {
 
     public BigDecimal getData(SelenideElement element) {
         String text = element.$("span[class^='currency-rates__itemValue']").getText();
-        logger.info("getData: " + text);
         return new BigDecimal(text.replaceAll("[^\\d,]", "").replace(',', '.'));
     }
 
@@ -62,7 +54,6 @@ public class YandexMain {
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName, false))) {
             writer.println(data);
         } catch (IOException e) {
-            logger.info("saveData: " + data);
             e.printStackTrace();
         }
     }
