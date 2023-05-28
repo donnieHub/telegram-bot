@@ -35,7 +35,7 @@ public class YandexMain {
         Configuration.webdriverLogsEnabled = true;
         System.setProperty("webdriver.chrome.logfile", "./chromedriver.log");
         System.setProperty("webdriver.chrome.verboseLogging", "true");
-        System.setProperty("chromeoptions.args", "--disable-dev-shm-usage");
+        System.setProperty("chromeoptions.args", "\"--no-sandbox\",\"--disable-dev-shm-usage\"");
         open(url);
         SelenideElement container = $("article.currency-rates__container-3P");
         container.shouldBe(visible);
