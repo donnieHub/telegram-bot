@@ -33,6 +33,7 @@ public class YandexMain {
     public void savePricesFromBrowser() {
         Configuration.headless = true;
         Configuration.webdriverLogsEnabled = true;
+        System.setProperty("webdriver.chrome.logfile", "./chromedriver.log");
         System.setProperty("webdriver.chrome.verboseLogging", "true");
         System.setProperty("chromeoptions.args", "--disable-dev-shm-usage");
         open(url);
