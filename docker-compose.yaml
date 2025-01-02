@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  gradle_build:
+    build: /
+    restart: "no"
+    volumes:
+      - tg-jar:/app/app/build/libs
+
+  tg_bot:
+    build: /app
+    restart: "no"
+    depends_on:
+      gradle_build:
+        condition: service_completed_successfully
+    volumes:
+      - tg-jar:/libs
+
+volumes:
+  tg-jar:

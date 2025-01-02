@@ -1,6 +1,8 @@
-FROM gradle:8.12.0-jdk11-alpine
+FROM gradle:8.12.0-jdk21 as builder
 LABEL authors="mychko"
 
 WORKDIR /app
 COPY . /app
-RUN ./gradlew run
+
+RUN ./gradlew --no-daemon :app:dependencies
+RUN ./gradlew --no-daemon :app:build
