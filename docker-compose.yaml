@@ -2,13 +2,13 @@ version: "3"
 
 services:
   gradle_build:
-    build: /
+    build: ./
     restart: "no"
     volumes:
       - tg-jar:/app/app/build/libs
 
   tg_bot:
-    build: /app
+    build: ./app
     restart: "no"
     depends_on:
       gradle_build:
