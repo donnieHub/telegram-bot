@@ -3,6 +3,7 @@ package telegram.bot.oil;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.util.logging.Logger;
 import telegram.bot.browser.YandexMain;
 
@@ -24,7 +25,8 @@ public class Oil implements OilService {
 	public String getOilPrice(String fileName) {
 		yandexMain.savePricesFromBrowser();
 		String oilPrice = "null";
-		try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+		URL filePath = getClass().getClassLoader().getResource(fileName);
+		try (BufferedReader reader = new BufferedReader(new FileReader(filePath.getPath()))) {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				String[] prices = line.split(" ");
