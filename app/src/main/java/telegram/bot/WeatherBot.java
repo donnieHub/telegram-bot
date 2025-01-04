@@ -1,6 +1,7 @@
 package telegram.bot;
 
 import static java.util.logging.Level.SEVERE;
+import static telegram.bot.Utils.getAppVersion;
 import static telegram.bot.forecast.cities.CityName.MOSCOW;
 import static telegram.bot.forecast.cities.CityName.OMSK;
 import static telegram.bot.forecast.cities.CityName.SAINT_PETERSBURG;
@@ -49,6 +50,7 @@ public class WeatherBot extends TelegramLongPollingBot {
 
     public WeatherBot(DefaultBotOptions options) {
         super(options);
+        getAppVersion();
         Utils.initProperties(property);
         this.setMyCommands();
     }

@@ -6,9 +6,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.net.JarURLConnection;
 
 public class Utils {
+
+    static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     private static final List<String> names = Arrays.asList("дмитрий", "дима", "димас", "димон", "илья", "ильюха", "dima", "ilia");
     protected static final List<String> greetings = Arrays.asList("Добрый день!", "Здравствуйте!", "Рад Вас видеть!", "Добро пожаловать!", "Доброво времени суток!", "Привет!", "Салют!", "Ты красавчик!");
@@ -18,6 +25,30 @@ public class Utils {
         try {
             property.load(propertyStream);
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void getAppVersion() {
+        try {
+            var jarUrl = Main.class.getProtectionDomain().getCodeSource().getLocation();
+            logger.info("Loaded from: " + jarUrl);
+
+            if (jarUrl.toString().endsWith(".jar")) {
+                try (JarFile jarFile = new JarFile(jarUrl.getPath())) {
+                    Manifest manifest = jarFile.getManifest();
+                    if (manifest != null) {
+                        Attributes attributes = manifest.getMainAttributes();
+                        String version = attributes.getValue("Implementation-Version"); // Или ваш ключ
+                        logger.info("Version: " + version);
+                    } else {
+                        logger.info("Manifest not found in JAR file");
+                    }
+                }
+            } else {
+                logger.info("Not running from a JAR file");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
