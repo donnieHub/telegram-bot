@@ -6,4 +6,4 @@ COPY . /app
 
 RUN ./gradlew --no-daemon :app:dependencies
 RUN ./gradlew --no-daemon :app:clean
-CMD ["sh", "-c", "./gradlew --no-daemon :app:clean && ./gradlew --no-daemon :app:build"]
+CMD ["sh", "-c", "./gradlew --no-daemon :app:build"]
