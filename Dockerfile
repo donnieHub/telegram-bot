@@ -5,4 +5,5 @@ WORKDIR /app
 COPY . /app
 
 RUN ./gradlew --no-daemon :app:dependencies
+RUN ./gradlew --no-daemon :app:clean
 RUN ./gradlew --no-daemon :app:build
