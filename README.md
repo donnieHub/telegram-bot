@@ -3,6 +3,7 @@
 The project is a telegram bot that receives information about the weather in various cities, the dollar exchange rate, the price of gold, etc.
 Technologies used:
 - Docker, Docker-compose;
+- Yandex\Google API;
 - Selenide;
 - Default Java HttpClient; 
 
