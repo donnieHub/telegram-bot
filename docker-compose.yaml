@@ -16,5 +16,14 @@ services:
     volumes:
       - tg-jar:/libs
 
+  selenium:
+    image: selenium/standalone-chrome:latest
+    container_name: selenium
+    ports:
+      - "4444:4444"
+    depends_on:
+      tg_bot:
+        condition: service_completed_successfully
+
 volumes:
   tg-jar:

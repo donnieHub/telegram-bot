@@ -37,9 +37,11 @@ public class YandexMain {
     public void savePricesFromBrowser() {
         Configuration.headless = true;
         Configuration.webdriverLogsEnabled = true;
-        System.setProperty("webdriver.chrome.logfile", "./chromedriver.log");
+        Configuration.remote = "http://localhost:4444/wd/hub"; // URL Selenium Grid
+        Configuration.browser = "chrome";
+        System.setProperty("webdriver.chrome.logfile", "chromedriver.log");
         System.setProperty("webdriver.chrome.verboseLogging", "true");
-        System.setProperty("chromeoptions.args", "\"--no-sandbox\",\"--disable-dev-shm-usage\"");
+        System.setProperty("chromeoptions.args", "--no-sandbox, --disable-dev-shm-usage");
         open(url);
         SelenideElement usdElement = $("a[aria-label='Курс USD/RUB']");
         SelenideElement eurElement = $("a[aria-label='Курс EUR/RUB']");
