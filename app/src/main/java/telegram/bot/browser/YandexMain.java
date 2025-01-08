@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class YandexMain {
 
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    final String url = "https://dzen.ru/";
+    final String url = "https://dzen.ru";
     public final static String fileName = "YandexMaindata.txt";
     Data data = new Data();
 
@@ -34,12 +34,11 @@ public class YandexMain {
     }
 
     public void savePricesFromBrowser() {
-        Configuration.headless = true;
-        Configuration.browser = "chrome";
-        Configuration.timeout = 10000;
-        Configuration.pageLoadTimeout = 10000;
-        Configuration.pageLoadStrategy = "none";
         Configuration.remote = "http://localhost:4444/wd/hub";
+        Configuration.browser = "chrome";
+        Configuration.timeout = 30000;
+        Configuration.pageLoadTimeout = 30000;
+        Configuration.pageLoadStrategy = "none";
         System.setProperty("chromeoptions.args", "--no-sandbox, --disable-dev-shm-usage, --headless, --disable-gpu, --disable-extensions, --disable-popup-blocking");
         logger.info("Before selenide browser start");
         open(url);
