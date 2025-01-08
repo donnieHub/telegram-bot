@@ -26,7 +26,6 @@ public class FinanceGoogle implements FinanceService, Property {
 	public static void main(String[] args) {
 		FinanceGoogle app = new FinanceGoogle();
 		Double rate = app.getDollarExchangeRate();
-		System.out.println("Курс доллара: " + rate);
 	}
 
 

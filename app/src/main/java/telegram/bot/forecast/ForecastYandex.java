@@ -35,7 +35,6 @@ public class ForecastYandex implements ForecastService, Property {
 		}
 
 		Long temp = app.getTemp(args[0]);
-		System.out.println("Погода в городе " + temp);
 	}
 
 	@Override

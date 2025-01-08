@@ -19,6 +19,7 @@ public class FinanceCommand extends BotCommand implements Sendable {
         message.enableMarkdown(true);
         message.setChatId(chatId.toString());
         message.setText("*Курс доллара: " + finance.getDollarExchangeRate() + "₽*");
+        logger.info("*Курс доллара: " + finance.getDollarExchangeRate() + "₽*");
         try {
             user = absSender.getMe().getFirstName();
             absSender.execute(message);

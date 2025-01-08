@@ -18,7 +18,6 @@ public class Oil implements OilService {
 	public static void main(String[] args) {
 		Oil app = new Oil();
 		String price = app.getOilPrice(YandexMain.fileName);
-		System.out.println("Цена: " + price);
 	}
 
 	@Override
