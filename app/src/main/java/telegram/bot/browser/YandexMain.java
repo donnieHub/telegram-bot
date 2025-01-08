@@ -1,8 +1,7 @@
 package telegram.bot.browser;
 
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.*;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.SelenideElement;
@@ -36,14 +35,15 @@ public class YandexMain {
 
     public void savePricesFromBrowser() {
         Configuration.headless = true;
-        Configuration.remote = "http://localhost:4444/wd/hub";
         Configuration.browser = "chrome";
         Configuration.timeout = 10000;
         Configuration.pageLoadTimeout = 10000;
+        Configuration.pageLoadStrategy = "none";
+        Configuration.remote = "http://localhost:4444/wd/hub";
         System.setProperty("chromeoptions.args", "--no-sandbox, --disable-dev-shm-usage, --headless, --disable-gpu, --disable-extensions, --disable-popup-blocking");
-        logger.info("Before Selenide browser start");
+        logger.info("Before selenide browser start");
         open(url);
-        logger.info("Selenide browser start");
+        logger.info("After selenide browser start");
         SelenideElement usdElement = $("a[aria-label='Курс USD/RUB']");
         SelenideElement eurElement = $("a[aria-label='Курс EUR/RUB']");
         SelenideElement oilElement = $("a[aria-label='Курс OIL']");
@@ -55,6 +55,7 @@ public class YandexMain {
             data.getEur().toString() + "₽",
             data.getOil().toString() + "$"
         ));
+        closeWebDriver();
     }
 
     public BigDecimal getData(SelenideElement element) {
