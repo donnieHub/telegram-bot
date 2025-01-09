@@ -22,6 +22,7 @@ public class YandexMain {
 
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     final String url = "https://dzen.ru";
+    final String containerName = "selenium";
     public final static String fileName = "YandexMaindata.txt";
     Data data = new Data();
 
@@ -34,7 +35,7 @@ public class YandexMain {
     }
 
     public void savePricesFromBrowser() {
-        Configuration.remote = "http://localhost:4444/wd/hub";
+        Configuration.remote = "http://" + containerName + ":4444/wd/hub";
         Configuration.browser = "chrome";
         Configuration.timeout = 30000;
         Configuration.pageLoadTimeout = 30000;
