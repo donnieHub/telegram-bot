@@ -35,7 +35,8 @@ public class YandexMain {
     }
 
     public void savePricesFromBrowser() {
-        Configuration.remote = "http://" + containerName + ":4444/wd/hub";
+        //Configuration.remote = "http://" + containerName + ":4444/wd/hub";
+        Configuration.remote = "http://localhost:4444/wd/hub";
         Configuration.browser = "chrome";
         Configuration.timeout = 30000;
         Configuration.pageLoadTimeout = 30000;
@@ -65,8 +66,7 @@ public class YandexMain {
     }
 
     public void saveData(List<String> data) {
-        URL filePath = getClass().getClassLoader().getResource(fileName);
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath.getPath(), false))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("./" + fileName, false))) {
             writer.println(data);
         } catch (IOException e) {
             logger.info("saveData: " + data);

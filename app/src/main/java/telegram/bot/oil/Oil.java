@@ -24,8 +24,7 @@ public class Oil implements OilService {
 	public String getOilPrice(String fileName) {
 		yandexMain.savePricesFromBrowser();
 		String oilPrice = "null";
-		URL filePath = getClass().getClassLoader().getResource(fileName);
-		try (BufferedReader reader = new BufferedReader(new FileReader(filePath.getPath()))) {
+		try (BufferedReader reader = new BufferedReader(new FileReader("./" + fileName))) {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				String[] prices = line.split(" ");
