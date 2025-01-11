@@ -19,7 +19,7 @@ public class OilCommand extends BotCommand implements Sendable {
         message = new SendMessage();
         message.enableMarkdown(true);
         message.setChatId(chatId.toString());
-        message.setText("Цена на нефть: " + oilService.getOilPrice(YandexMain.fileName));
+        message.setText("Цена на нефть: " + oilService.getOilPrice(YandexMain.temp));
         try {
             user = absSender.getMe().getFirstName();
             absSender.execute(message);

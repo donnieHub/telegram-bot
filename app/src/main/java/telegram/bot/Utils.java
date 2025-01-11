@@ -21,9 +21,11 @@ public class Utils {
     protected static final List<String> greetings = Arrays.asList("Добрый день!", "Здравствуйте!", "Рад Вас видеть!", "Добро пожаловать!", "Доброво времени суток!", "Привет!", "Салют!", "Ты красавчик!");
 
     public static void initProperties(Properties property) {
-        InputStream propertyStream = Main.class.getClassLoader().getResourceAsStream("secret.properties");
+        InputStream secretPropertyStream = Main.class.getClassLoader().getResourceAsStream("secret.properties");
+        InputStream configPropertyStream = Main.class.getClassLoader().getResourceAsStream("config.properties");
         try {
-            property.load(propertyStream);
+            property.load(secretPropertyStream);
+            property.load(configPropertyStream);
         } catch (IOException e) {
             e.printStackTrace();
         }

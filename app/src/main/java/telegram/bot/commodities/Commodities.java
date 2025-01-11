@@ -14,12 +14,12 @@ import telegram.bot.commodities.commodities.json.CommodityPrice;
 public class Commodities implements CommoditiesService, Property {
 
 	private final MyHttpClient myHttpClient;
-	Properties property = new Properties();
+	private Properties properties = new Properties();
 	private final static String URI = "Commodities-URI";
 	private final static String API_KEY = "Commodities-API-Key";
 
 	Commodities() {
-		Utils.initProperties(property);
+		Utils.initProperties(properties);
 		myHttpClient = new MyHttpClient(URI, API_KEY);
 	}
 
@@ -43,11 +43,11 @@ public class Commodities implements CommoditiesService, Property {
 	}
 
 	public String getUriFromPropertyFile(){
-		return property.getProperty(URI);
+		return properties.getProperty(URI);
 	}
 
 	public String getApiKeyFromPropertyFile(){
-		return property.getProperty(API_KEY);
+		return properties.getProperty(API_KEY);
 	}
 
 }

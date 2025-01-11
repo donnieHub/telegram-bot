@@ -3,7 +3,6 @@ package telegram.bot.oil;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
 import java.util.logging.Logger;
 import telegram.bot.browser.YandexMain;
 
@@ -17,7 +16,7 @@ public class Oil implements OilService {
 
 	public static void main(String[] args) {
 		Oil app = new Oil();
-		String price = app.getOilPrice(YandexMain.fileName);
+		String price = app.getOilPrice(YandexMain.temp);
 	}
 
 	@Override

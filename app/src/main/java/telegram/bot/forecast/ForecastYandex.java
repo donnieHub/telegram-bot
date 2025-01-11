@@ -17,13 +17,13 @@ import telegram.bot.forecast.yandex.json.YandexWeatherResponse;
 public class ForecastYandex implements ForecastService, Property {
 
 	private final MyHttpClient myHttpClient;
-	Properties property = new Properties();
+	private Properties properties = new Properties();
 	private final static String URI = "Yandex-URI";
 	private final static String API_KEY = "Yandex-API-Key";
 	private City city;
 
 	ForecastYandex() {
-		Utils.initProperties(property);
+		Utils.initProperties(properties);
 		myHttpClient = new MyHttpClient(URI, API_KEY);
 	}
 
@@ -69,11 +69,11 @@ public class ForecastYandex implements ForecastService, Property {
 
 	@Override
 	public String getUriFromPropertyFile(){
-		return property.getProperty(URI);
+		return properties.getProperty(URI);
 	}
 
 	@Override
 	public String getApiKeyFromPropertyFile(){
-		return property.getProperty(API_KEY);
+		return properties.getProperty(API_KEY);
 	}
 }

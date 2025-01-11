@@ -44,14 +44,14 @@ public class WeatherBot extends TelegramLongPollingBot {
     Sendable keyboardCommand = new KeyboardCommand();
     Sendable helpCommand = new HelpCommand();
     Sendable startCommand = new StartCommand();
-    Properties property = new Properties();
+    private Properties properties = new Properties();
     List<BotCommand> LIST_OF_COMMANDS = List.of(new BotCommand("/help", "Помощь"));
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     public WeatherBot(DefaultBotOptions options) {
         super(options);
         getAppVersion();
-        Utils.initProperties(property);
+        Utils.initProperties(properties);
         this.setMyCommands();
     }
 
@@ -206,6 +206,6 @@ public class WeatherBot extends TelegramLongPollingBot {
     }
 
     private String getBotTokenFromPropertyFile(){
-        return property.getProperty(TOKEN);
+        return properties.getProperty(TOKEN);
     }
 }

@@ -1,32 +1,31 @@
 package telegram.bot.browser;
 
-import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.SelenideElement;
+import telegram.bot.Utils;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 public class YandexMain {
 
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    final String url = "https://dzen.ru";
-    final String containerName = "selenium";
-    public final static String fileName = "YandexMaindata.txt";
-    Data data = new Data();
+    private Properties properties = new Properties();
+    private static final String url = "https://dzen.ru";
+    private Data data = new Data();
+    public final static String temp = "YandexMaindata.txt";
 
     public YandexMain() {
+        Utils.initProperties(properties);
     }
 
     public static void main(String[] args) throws MalformedURLException {
@@ -35,12 +34,15 @@ public class YandexMain {
     }
 
     public void savePricesFromBrowser() {
-        Configuration.remote = "http://" + containerName + ":4444/wd/hub";
-        Configuration.browser = "chrome";
-        Configuration.timeout = 30000;
-        Configuration.pageLoadTimeout = 30000;
-        Configuration.pageLoadStrategy = "none";
-        System.setProperty("chromeoptions.args", "--no-sandbox, --disable-dev-shm-usage, --headless, --disable-gpu, --disable-extensions, --disable-popup-blocking");
+        String mode = properties.getProperty("mode", SeleniumMode.REMOTE.getMode());
+        if (mode.equals(SeleniumMode.REMOTE.getMode())) {
+            System.setProperty("chromeoptions.args", "--no-sandbox, --disable-dev-shm-usage, --headless, --disable-gpu, --disable-extensions, --disable-popup-blocking");
+        }
+        Configuration.remote = properties.getProperty("Selenium-URL-" + mode);
+        Configuration.browser = properties.getProperty("Selenium-Browser");
+        Configuration.timeout = Long.parseLong(properties.getProperty("Selenium-Timeout"));
+        Configuration.pageLoadTimeout = Long.parseLong(properties.getProperty("Selenium-PageLoadTimeout"));
+        Configuration.pageLoadStrategy = properties.getProperty("Selenium-PageLoadStrategy");
         logger.info("Before selenide browser start");
         open(url);
         logger.info("After selenide browser start");
@@ -65,7 +67,7 @@ public class YandexMain {
     }
 
     public void saveData(List<String> data) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter("./" + fileName, false))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("./" + temp, false))) {
             writer.println(data);
         } catch (IOException e) {
             logger.info("saveData: " + data);
