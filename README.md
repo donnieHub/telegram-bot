@@ -7,4 +7,10 @@ Technologies used:
 - Selenide;
 - Default Java HttpClient; 
 
+How to start:
+```
+docker compose down -v
+docker compose up --build -d
+```
+
 ![image](https://github.com/user-attachments/assets/abb34eb8-b942-4d31-a0f0-9d8c036f707d)
