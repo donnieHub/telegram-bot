@@ -25,5 +25,23 @@ services:
       tg_bot:
         condition: service_started
 
+  redis:
+    build: ./redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+#    depends_on:
+#      tg_bot:
+#        condition: service_started
+
+db:
+  image: postgres
+  ports:
+    - "5432:5432"
+  environment:
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+    POSTGRES_DB: mydb
+
 volumes:
   tg-jar:
