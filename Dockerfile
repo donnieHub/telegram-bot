@@ -1,5 +1,4 @@
 FROM gradle:8.12.0-jdk21 as builder
-LABEL authors="mychko"
 
 WORKDIR /app
 COPY . /app

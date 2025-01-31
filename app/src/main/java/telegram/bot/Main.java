@@ -1,6 +1,8 @@
 package telegram.bot;
 
 import java.io.IOException;
+import java.util.Properties;
+
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;

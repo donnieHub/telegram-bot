@@ -36,17 +36,17 @@ public class WeatherBot extends TelegramLongPollingBot {
 
     private static final String TOKEN = "Bot-token";
     private static final String BOT_NAME = "omsk55_weather_bot";
-    public static Long currentChatId;
-    ForecastService weather = ForecastService.getInstance();
-    Sendable forecastCommand = new ForecastCommand();
-    Sendable financeCommand = new FinanceCommand();
-    Sendable oilCommand = new OilCommand();
-    Sendable keyboardCommand = new KeyboardCommand();
-    Sendable helpCommand = new HelpCommand();
-    Sendable startCommand = new StartCommand();
-    private Properties properties = new Properties();
-    List<BotCommand> LIST_OF_COMMANDS = List.of(new BotCommand("/help", "Помощь"));
-    Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private static Long currentChatId;
+    private ForecastService weather = ForecastService.getInstance();
+    private Sendable forecastCommand = new ForecastCommand();
+    private Sendable financeCommand = new FinanceCommand();
+    private Sendable oilCommand = new OilCommand();
+    private Sendable keyboardCommand = new KeyboardCommand();
+    private Sendable helpCommand = new HelpCommand();
+    private Sendable startCommand = new StartCommand();
+    protected Properties properties = new Properties();
+    private List<BotCommand> LIST_OF_COMMANDS = List.of(new BotCommand("/help", "Помощь"));
+    private Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     public WeatherBot(DefaultBotOptions options) {
         super(options);
