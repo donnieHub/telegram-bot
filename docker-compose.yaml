@@ -25,11 +25,11 @@ services:
       tg_bot:
         condition: service_started
 
-  redis:
-    build: ./redis
-    container_name: redis
-    ports:
-      - "6379:6379"
+#  redis:
+#    build: ./redis
+#    container_name: redis
+#    ports:
+#      - "6379:6379"
 #    depends_on:
 #      tg_bot:
 #        condition: service_started
