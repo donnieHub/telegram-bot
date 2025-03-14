@@ -2,6 +2,7 @@ package telegram.bot;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -11,7 +12,6 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.net.JarURLConnection;
 
 public class Utils {
 
@@ -79,5 +79,25 @@ public class Utils {
                 return null;
             }
         }
+    }
+
+    public static double parsePrice(String priceString, String pattern) {
+        String cleanedString = priceString.replaceAll(",", ".").replaceAll("[^\\d.]", "");
+
+        double price = Double.parseDouble(cleanedString);
+
+        DecimalFormat df = new DecimalFormat(pattern);
+        df.setDecimalSeparatorAlwaysShown(false);
+        String formattedPrice = df.format(price);
+
+        return Double.parseDouble(formattedPrice);
+    }
+
+    public static double parsePrice(Double price, String pattern) {
+        DecimalFormat df = new DecimalFormat(pattern);
+        df.setDecimalSeparatorAlwaysShown(false);
+        String formattedPrice = df.format(price);
+
+        return Double.parseDouble(formattedPrice);
     }
 }

@@ -9,7 +9,6 @@ import telegram.bot.Utils;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.List;
@@ -49,21 +48,21 @@ public class YandexMain {
         SelenideElement usdElement = $("a[aria-label='Курс USD/RUB']");
         SelenideElement eurElement = $("a[aria-label='Курс EUR/RUB']");
         SelenideElement oilElement = $("a[aria-label='Курс OIL']");
-        data.setOil(getData(oilElement));
-        data.setEur(getData(eurElement));
-        data.setUsd(getData(usdElement));
+        data.setOil(parseData(oilElement));
+        data.setEur(parseData(eurElement));
+        data.setUsd(parseData(usdElement));
         saveData(Arrays.asList(
-            data.getUsd().toString() + "₽",
-            data.getEur().toString() + "₽",
-            data.getOil().toString() + "$"
+                data.getUsd() + "₽",
+                data.getEur() + "₽",
+                data.getOil() + "$"
         ));
         closeWebDriver();
     }
 
-    public BigDecimal getData(SelenideElement element) {
+    public double parseData(SelenideElement element) {
         String text = element.$("span").getText();
         logger.info("getData: " + text);
-        return new BigDecimal(text.replaceAll("[^\\d,]", "").replace(',', '.'));
+        return Utils.parsePrice(text, "#.##");
     }
 
     public void saveData(List<String> data) {
@@ -76,31 +75,31 @@ public class YandexMain {
     }
 
     class Data {
-        private BigDecimal usd;
-        private BigDecimal eur;
-        private BigDecimal oil;
+        private double usd;
+        private double eur;
+        private double oil;
 
-        public BigDecimal getUsd() {
+        public double getUsd() {
             return usd;
         }
 
-        public void setUsd(BigDecimal usd) {
+        public void setUsd(double usd) {
             this.usd = usd;
         }
 
-        public BigDecimal getEur() {
+        public double getEur() {
             return eur;
         }
 
-        public void setEur(BigDecimal eur) {
+        public void setEur(double eur) {
             this.eur = eur;
         }
 
-        public BigDecimal getOil() {
+        public double getOil() {
             return oil;
         }
 
-        public void setOil(BigDecimal oil) {
+        public void setOil(double oil) {
             this.oil = oil;
         }
     }

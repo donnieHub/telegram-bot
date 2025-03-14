@@ -38,7 +38,8 @@ public class FinanceGoogle implements FinanceService, Property {
 		Gson gson = builder.create();
 		String json = response.get().body();
 		UsdToRub responseJson = gson.fromJson(json, UsdToRub.class);
-		return responseJson.getSummary().getExtractedPrice();
+		Double dollarPrice = responseJson.getSummary().getExtractedPrice();
+		return Utils.parsePrice(dollarPrice, "#.##");
 	}
 
 	public String getUriFromPropertyFile(){

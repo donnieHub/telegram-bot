@@ -22,6 +22,7 @@ public class Oil implements OilService {
 	@Override
 	public String getOilPrice(String fileName) {
 		yandexMain.savePricesFromBrowser();
+
 		String oilPrice = "null";
 		try (BufferedReader reader = new BufferedReader(new FileReader("./" + fileName))) {
 			String line;
