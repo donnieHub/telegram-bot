@@ -8,7 +8,7 @@ services:
   tg_bot:
     build: ./app
     container_name: telegram_bot
-    restart: "on-failure:3"
+    restart: on-failure:3
     depends_on:
       gradle_build:
         condition: service_completed_successfully
@@ -18,7 +18,7 @@ services:
   selenium:
     image: selenium/standalone-chrome:latest
     container_name: selenium
-    restart: "on-failure:3"
+    restart: on-failure:3
     ports:
       - "4444:4444"
     depends_on:
@@ -34,14 +34,14 @@ services:
 #      tg_bot:
 #        condition: service_started
 
-db:
-  image: postgres
-  ports:
-    - "5432:5432"
-  environment:
-    POSTGRES_USER: postgres
-    POSTGRES_PASSWORD: postgres
-    POSTGRES_DB: mydb
+#  db:
+#    image: postgres
+#    ports:
+#      - "5432:5432"
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: postgres
+#      POSTGRES_DB: mydb
 
 volumes:
   tg-jar:
