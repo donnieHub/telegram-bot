@@ -1,25 +1,26 @@
-package telegram.bot.oil;
+package telegram.bot.gold;
 
-import java.util.logging.Logger;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import telegram.bot.Sendable;
-import telegram.bot.browser.YandexMain;
+import telegram.bot.browser.CbrMain;
 
-public class OilCommand extends BotCommand implements Sendable {
-    public final static String COMMAND = "/oil";
-    Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    String user;
-    SendMessage message;
-    OilService oilService = OilService.getInstance();
+import java.util.logging.Logger;
+
+public class GoldCommand extends BotCommand implements Sendable {
+    public final static String COMMAND = "/gold";
+    private Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private String user;
+    private SendMessage message;
+    private GoldService goldService = GoldService.getInstance();
 
     public void sendAnswer(AbsSender absSender, Long chatId) {
         message = new SendMessage();
         message.enableMarkdown(true);
         message.setChatId(chatId.toString());
-        message.setText("Цена на нефть: " + oilService.getOilPrice(YandexMain.temp));
+        message.setText("Цена на золото: " + goldService.getGoldPrice(CbrMain.temp));
         try {
             user = absSender.getMe().getFirstName();
             absSender.execute(message);

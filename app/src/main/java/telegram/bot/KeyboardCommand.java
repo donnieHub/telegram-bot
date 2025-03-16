@@ -10,7 +10,7 @@ import telegram.bot.forecast.ForecastCommand;
 
 public class KeyboardCommand extends BotCommand implements Sendable {
 
-    public final static String command = "/showKeyboard";
+    public final static String COMMAND = "/showKeyboard";
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     String user;
     SendMessage message;

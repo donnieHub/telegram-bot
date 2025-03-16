@@ -13,7 +13,7 @@ import telegram.bot.forecast.ForecastCommand;
 
 public class StartCommand extends BotCommand implements Sendable {
 
-    public final static String command = "/start";
+    public final static String COMMAND = "/start";
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     String user;
     SendMessage message;

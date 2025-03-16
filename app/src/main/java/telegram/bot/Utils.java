@@ -1,5 +1,7 @@
 package telegram.bot;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
@@ -10,6 +12,7 @@ import java.util.Properties;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -99,5 +102,17 @@ public class Utils {
         String formattedPrice = df.format(price);
 
         return Double.parseDouble(formattedPrice);
+    }
+
+    public static void createFileIfNotExist(String fileName) {
+        File file = new File("./" + fileName);
+        if (!file.exists()) {
+            logger.info("Пробуем создать файл: " + fileName);
+            try (FileWriter writer = new FileWriter(file)) {
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, "Не удалось создать файл: " + fileName);
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -1,12 +1,11 @@
 package telegram.bot.browser;
 
-import static com.codeborne.selenide.Selenide.*;
-import static telegram.bot.Utils.createFileIfNotExist;
-
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import telegram.bot.Utils;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,23 +13,27 @@ import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class YandexMain {
+import static com.codeborne.selenide.Selenide.*;
+import static telegram.bot.Utils.createFileIfNotExist;
+
+public class CbrMain {
 
     Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private Properties properties = new Properties();
-    private static final String url = "https://dzen.ru";
+    private static final String url = "https://www.cbr.ru/hd_base/metall/metall_base_new/";
     private Data data = new Data();
-    public final static String temp = "YandexMainData.txt";
+    public final static String temp = "CbrMainData.txt";
 
-    public YandexMain() {
+    public CbrMain() {
         Utils.initProperties(properties);
     }
 
     public static void main(String[] args) throws MalformedURLException {
-        YandexMain yandexMain = new YandexMain();
-        yandexMain.savePricesFromBrowser();
+        CbrMain cbrMain = new CbrMain();
+        cbrMain.savePricesFromBrowser();
     }
 
     public void savePricesFromBrowser() {
@@ -46,22 +49,31 @@ public class YandexMain {
         logger.info("Before selenide browser start");
         open(url);
         logger.info("After selenide browser start");
-        SelenideElement usdElement = $("a[aria-label='Курс USD/RUB']");
-        SelenideElement eurElement = $("a[aria-label='Курс EUR/RUB']");
-        SelenideElement oilElement = $("a[aria-label='Курс OIL']");
-        data.setOil(parseData(oilElement));
-        data.setEur(parseData(eurElement));
-        data.setUsd(parseData(usdElement));
+
+        SelenideElement table = $("table.data");
+        ElementsCollection tableRows = table.$$("tr");
+        SelenideElement tableHeaderElement = tableRows.get(0);
+        SelenideElement lastDateElement = tableRows.get(1);
+        SelenideElement goldElement = lastDateElement.$$("td.right").get(0);
+        SelenideElement silverElement = lastDateElement.$$("td.right").get(1);
+        SelenideElement platinumElement = lastDateElement.$$("td.right").get(2);
+        SelenideElement palladiumElement = lastDateElement.$$("td.right").get(3);
+
+        data.setPlatinum(parseData(goldElement));
+        data.setSilver(parseData(silverElement));
+        data.setGold(parseData(platinumElement));
+        data.setGold(parseData(palladiumElement));
         saveData(Arrays.asList(
-                data.getUsd() + "₽",
-                data.getEur() + "₽",
-                data.getOil() + "$"
+                data.getGold() + "₽",
+                data.getSilver() + "₽",
+                data.getPlatinum() + "₽",
+                data.getPalladium() + "₽"
         ));
         closeWebDriver();
     }
 
     public double parseData(SelenideElement element) {
-        String text = element.$("span").getText();
+        String text = element.getText();
         logger.info("getData: " + text);
         return Utils.parsePrice(text, "#.##");
     }
@@ -78,32 +90,41 @@ public class YandexMain {
     }
 
     class Data {
-        private double usd;
-        private double eur;
-        private double oil;
+        private double gold;
+        private double silver;
+        private double platinum;
+        private double palladium;
 
-        public double getUsd() {
-            return usd;
+        public double getGold() {
+            return gold;
         }
 
-        public void setUsd(double usd) {
-            this.usd = usd;
+        public void setGold(double gold) {
+            this.gold = gold;
         }
 
-        public double getEur() {
-            return eur;
+        public double getSilver() {
+            return silver;
         }
 
-        public void setEur(double eur) {
-            this.eur = eur;
+        public void setSilver(double silver) {
+            this.silver = silver;
         }
 
-        public double getOil() {
-            return oil;
+        public double getPlatinum() {
+            return platinum;
         }
 
-        public void setOil(double oil) {
-            this.oil = oil;
+        public void setPlatinum(double platinum) {
+            this.platinum = platinum;
+        }
+
+        public double getPalladium() {
+            return palladium;
+        }
+
+        public void setPalladium(double palladium) {
+            this.palladium = palladium;
         }
     }
 }

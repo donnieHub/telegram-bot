@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import telegram.bot.Sendable;
 
 public class ForecastCommand extends BotCommand implements Sendable {
-    public final static String command = "/forecast";
+    public final static String COMMAND = "/forecast";
     public final static String messageText = "*В каком городе вы хотите узнать погоду?*";
     String user;
     SendMessage message;

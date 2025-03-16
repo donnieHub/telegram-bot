@@ -28,6 +28,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import telegram.bot.finance.FinanceCommand;
 import telegram.bot.forecast.ForecastCommand;
 import telegram.bot.forecast.ForecastService;
+import telegram.bot.gold.GoldCommand;
 import telegram.bot.help.HelpCommand;
 import telegram.bot.oil.OilCommand;
 import telegram.bot.start.StartCommand;
@@ -41,6 +42,7 @@ public class WeatherBot extends TelegramLongPollingBot {
     private Sendable forecastCommand = new ForecastCommand();
     private Sendable financeCommand = new FinanceCommand();
     private Sendable oilCommand = new OilCommand();
+    private Sendable goldCommand = new GoldCommand();
     private Sendable keyboardCommand = new KeyboardCommand();
     private Sendable helpCommand = new HelpCommand();
     private Sendable startCommand = new StartCommand();
@@ -105,22 +107,25 @@ public class WeatherBot extends TelegramLongPollingBot {
             if (commandEntity.isPresent()) {
                 String command = commandEntity.get().getText();
                 switch (command) {
-                    case StartCommand.command:
+                    case StartCommand.COMMAND:
                         startCommand.sendAnswer(this, currentChatId);
                         break;
-                    case ForecastCommand.command:
+                    case ForecastCommand.COMMAND:
                         forecastCommand.sendAnswer(this, currentChatId);
                         break;
-                    case FinanceCommand.command:
+                    case FinanceCommand.COMMAND:
                         financeCommand.sendAnswer(this, currentChatId);
                         break;
-                    case OilCommand.command:
+                    case OilCommand.COMMAND:
                         oilCommand.sendAnswer(this, currentChatId);
                         break;
-                    case KeyboardCommand.command:
+                    case GoldCommand.COMMAND:
+                        goldCommand.sendAnswer(this, currentChatId);
+                        break;
+                    case KeyboardCommand.COMMAND:
                         keyboardCommand.sendAnswer(this, currentChatId);
                         break;
-                    case HelpCommand.command:
+                    case HelpCommand.COMMAND:
                         helpCommand.sendAnswer(this, currentChatId);
                         break;
                     default:
@@ -131,7 +136,7 @@ public class WeatherBot extends TelegramLongPollingBot {
                 }
                 logger.info("chatId: " + currentChatId);
                 logger.info("bot_command getFrom: " + message.getFrom().getFirstName());
-                logger.info("bot_command: " + message.getEntities().get(0).getType());
+                logger.info("bot_command: " + message.getEntities().getFirst().getType());
                 return;
             }
         }
@@ -156,14 +161,18 @@ public class WeatherBot extends TelegramLongPollingBot {
             else if (messageLine.equals("Цена на нефть")) {
                 oilCommand.sendAnswer(this, currentChatId);
             }
+            else if (messageLine.equals("Цена на золото")) {
+                goldCommand.sendAnswer(this, currentChatId);
+            }
             else if (messageLine.equals("Помощь")) {
                 this.execute(
-                    SendMessage.builder().chatId(currentChatId).text("Список команд:\n"
-                        + "/forecast - погода в городе\n"
-                        + "/dollar_exchange_rate - курс доллара\n"
-                        + "/oil - цена на нефть\n"
-                        + "/help - помощь\n"
-                    ).build());
+                        SendMessage.builder().chatId(currentChatId).text("Список команд:\n"
+                                + "/forecast - погода в городе\n"
+                                + "/dollar_exchange_rate - курс доллара\n"
+                                + "/oil - цена на нефть\n"
+                                + "/gold - цена на золото\n"
+                                + "/help - помощь\n"
+                        ).build());
             }
             else {
                 this.execute(SendMessage.builder().chatId(message.getChatId())
