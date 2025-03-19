@@ -16,9 +16,7 @@ public class Keyboard {
 
     private static final List<KeyboardRow> KEYBOARD_ROWS = Arrays.asList(
             createKeyboardRow(WEATHER_BTN_TEXT),
-            createKeyboardRow(DOLLAR_PRICE_BTN_TEXT),
-            createKeyboardRow(OIL_PRICE_BTN_TEXT),
-            createKeyboardRow(GOLD_PRICE_BTN_TEXT),
+            createKeyboardRow(DOLLAR_PRICE_BTN_TEXT, OIL_PRICE_BTN_TEXT, GOLD_PRICE_BTN_TEXT),
             createKeyboardRow(HELP_BTN_TEXT)
     );
 
@@ -32,6 +30,14 @@ public class Keyboard {
     private static KeyboardRow createKeyboardRow(String buttonText) {
         KeyboardRow row = new KeyboardRow();
         row.add(new KeyboardButton(buttonText));
+        return row;
+    }
+
+    private static KeyboardRow createKeyboardRow(String... buttonsText) {
+        KeyboardRow row = new KeyboardRow();
+        for (String text : buttonsText) {
+            row.add(new KeyboardButton(text));
+        }
         return row;
     }
 }
