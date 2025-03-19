@@ -11,16 +11,15 @@ import java.util.logging.Logger;
 
 public class GoldCommand extends BotCommand implements Sendable {
     public final static String COMMAND = "/gold";
-    private Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private String user;
-    private SendMessage message;
-    private GoldService goldService = GoldService.getInstance();
+    private final GoldService goldService = GoldService.getInstance();
 
     public void sendAnswer(AbsSender absSender, Long chatId) {
-        message = new SendMessage();
+        SendMessage message = new SendMessage();
         message.enableMarkdown(true);
         message.setChatId(chatId.toString());
-        message.setText("Цена на золото: " + goldService.getGoldPrice(CbrMain.temp));
+        message.setText("Цена на золото: " + goldService.getGoldPrice(CbrMain.TEMP_FILE));
         try {
             user = absSender.getMe().getFirstName();
             absSender.execute(message);

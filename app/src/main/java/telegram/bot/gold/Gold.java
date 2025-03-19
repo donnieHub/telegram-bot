@@ -1,22 +1,18 @@
 package telegram.bot.gold;
 
 import telegram.bot.browser.CbrMain;
-import telegram.bot.browser.YandexMain;
 
 import java.io.*;
 import java.util.logging.Logger;
 
 public class Gold implements GoldService {
 
-	Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-	CbrMain cbrMain = new CbrMain();
-
-	Gold() {
-	}
+	private final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	private final CbrMain cbrMain = new CbrMain();
 
 	public static void main(String[] args) {
 		Gold app = new Gold();
-		String price = app.getGoldPrice(CbrMain.temp);
+		String price = app.getGoldPrice(CbrMain.TEMP_FILE);
 	}
 
 	@Override
@@ -28,7 +24,7 @@ public class Gold implements GoldService {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				String[] prices = line.split(" ");
-				goldPrice = prices[prices.length-2].replaceAll("[^\\d\\.$]", "");
+				goldPrice = prices[prices.length-2].replaceAll("[^\\d.$]", "");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

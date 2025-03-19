@@ -1,5 +1,6 @@
 package telegram.bot.commodities;
 
+@Deprecated
 public interface CommoditiesService {
 
     static CommoditiesService getInstance() {

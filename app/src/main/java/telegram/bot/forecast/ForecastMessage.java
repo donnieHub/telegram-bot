@@ -10,13 +10,12 @@ import telegram.bot.Sendable;
 public class ForecastMessage extends BotCommand implements Sendable {
     public final static String COMMAND = "/forecast";
     public final static String messageText = "*В каком городе вы хотите узнать погоду?*";
-    String user;
-    SendMessage message;
-    Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    CityButtons buttons = new CityButtons();
+    private String user;
+    private final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private final CityButtons buttons = new CityButtons();
 
     public void sendAnswer(AbsSender absSender, Long chatId) {
-        message = new SendMessage();
+        SendMessage message = new SendMessage();
         message.enableMarkdown(true);
         message.setChatId(chatId.toString());
         message.setText(messageText);

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class Utils {
 
-    static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private static final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     private static final List<String> names = Arrays.asList("дмитрий", "дима", "димас", "димон", "илья", "ильюха", "dima", "ilia");
     protected static final List<String> greetings = Arrays.asList("Добрый день!", "Здравствуйте!", "Рад Вас видеть!", "Добро пожаловать!", "Доброво времени суток!", "Привет!", "Салют!", "Ты красавчик!");
@@ -107,10 +107,10 @@ public class Utils {
     public static void createFileIfNotExist(String fileName) {
         File file = new File("./" + fileName);
         if (!file.exists()) {
-            logger.info("Пробуем создать файл: " + fileName);
+            logger.info("Let's try to create a file: " + fileName);
             try (FileWriter writer = new FileWriter(file)) {
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "Не удалось создать файл: " + fileName);
+                logger.log(Level.SEVERE, "Failed to create file: " + fileName);
                 e.printStackTrace();
             }
         }

@@ -7,19 +7,15 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import telegram.bot.Keyboard;
 import telegram.bot.Sendable;
-import telegram.bot.commodities.CommoditiesCommand;
-import telegram.bot.finance.FinanceCommand;
-import telegram.bot.forecast.ForecastCommand;
 
 public class StartCommand extends BotCommand implements Sendable {
 
     public final static String COMMAND = "/start";
-    Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    String user;
-    SendMessage message;
+    private final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private String user;
 
     public void sendAnswer(AbsSender absSender, Long chatId) {
-        message = new SendMessage();
+        SendMessage message = new SendMessage();
         message.setChatId(chatId.toString());
         message.setText("Здравствуйте!");
         message.setReplyMarkup(new Keyboard().getKeyboardRowMarkup());

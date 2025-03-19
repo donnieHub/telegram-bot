@@ -9,17 +9,15 @@ import telegram.bot.Sendable;
 
 public class FinanceCommand extends BotCommand implements Sendable {
     public final static String COMMAND = "/dollarExchangeRate";
-    Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    String user;
-    SendMessage message;
-    FinanceService finance = FinanceService.getInstance();
+    private final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private String user;
+    private final FinanceService finance = FinanceService.getInstance();
 
     public void sendAnswer(AbsSender absSender, Long chatId) {
-        message = new SendMessage();
+        SendMessage message = new SendMessage();
         message.enableMarkdown(true);
         message.setChatId(chatId.toString());
         message.setText("*Курс доллара: " + finance.getDollarExchangeRate() + "₽*");
-        logger.info("*Курс доллара: " + finance.getDollarExchangeRate() + "₽*");
         try {
             user = absSender.getMe().getFirstName();
             absSender.execute(message);

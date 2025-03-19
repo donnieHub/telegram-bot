@@ -7,19 +7,18 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import telegram.bot.Sendable;
 
+@Deprecated
 public class CommoditiesCommand extends BotCommand implements Sendable {
     public final static String COMMAND = "/commodities";
-    Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    String user;
-    SendMessage message;
-    CommoditiesService commodities = CommoditiesService.getInstance();
-    String commoditiesType = "BRENTOIL";
+    private final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private String user;
+    private final CommoditiesService commodities = CommoditiesService.getInstance();
+    private final String commoditiesType = "BRENTOIL";
 
     public void sendAnswer(AbsSender absSender, Long chatId) {
-        message = new SendMessage();
+        SendMessage message = new SendMessage();
         message.enableMarkdown(true);
         message.setChatId(chatId.toString());
-        //TODO добавить кэширование
         message.setText("Цена на нефть и газ: " + commodities.getCommodityPrice(commoditiesType).intValue() + "$");
         try {
             user = absSender.getMe().getFirstName();

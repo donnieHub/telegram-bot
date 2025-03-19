@@ -5,7 +5,6 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import telegram.bot.Utils;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,7 +12,6 @@ import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.codeborne.selenide.Selenide.*;
@@ -21,11 +19,11 @@ import static telegram.bot.Utils.createFileIfNotExist;
 
 public class CbrMain {
 
-    Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    private Properties properties = new Properties();
+    private final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private final Properties properties = new Properties();
     private static final String url = "https://www.cbr.ru/hd_base/metall/metall_base_new/";
-    private Data data = new Data();
-    public final static String temp = "CbrMainData.txt";
+    private final Data data = new Data();
+    public final static String TEMP_FILE = "CbrMainData.txt";
 
     public CbrMain() {
         Utils.initProperties(properties);
@@ -79,9 +77,9 @@ public class CbrMain {
     }
 
     public void saveData(List<String> data) {
-        createFileIfNotExist(temp);
+        createFileIfNotExist(TEMP_FILE);
 
-        try (PrintWriter writer = new PrintWriter(new FileWriter("./" + temp, false))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("./" + TEMP_FILE, false))) {
             writer.println(data);
         } catch (IOException e) {
             logger.info("saveData: " + data);

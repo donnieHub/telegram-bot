@@ -11,12 +11,11 @@ import telegram.bot.forecast.ForecastCommand;
 public class KeyboardCommand extends BotCommand implements Sendable {
 
     public final static String COMMAND = "/showKeyboard";
-    Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    String user;
-    SendMessage message;
+    private final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private String user;
 
     public void sendAnswer(AbsSender absSender, Long chatId) {
-        message = new SendMessage();
+        SendMessage message = new SendMessage();
         message.enableMarkdown(true);
         message.setChatId(chatId.toString());
         message.setReplyMarkup(new Keyboard().getKeyboardRowMarkup());

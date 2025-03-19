@@ -18,11 +18,11 @@ import java.util.logging.Logger;
 
 public class YandexMain {
 
-    Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    private Properties properties = new Properties();
+    private final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private final Properties properties = new Properties();
     private static final String url = "https://dzen.ru";
-    private Data data = new Data();
-    public final static String temp = "YandexMainData.txt";
+    private final Data data = new Data();
+    public final static String TEMP_FILE = "YandexMainData.txt";
 
     public YandexMain() {
         Utils.initProperties(properties);
@@ -67,9 +67,9 @@ public class YandexMain {
     }
 
     public void saveData(List<String> data) {
-        createFileIfNotExist(temp);
+        createFileIfNotExist(TEMP_FILE);
 
-        try (PrintWriter writer = new PrintWriter(new FileWriter("./" + temp, false))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("./" + TEMP_FILE, false))) {
             writer.println(data);
         } catch (IOException e) {
             logger.info("saveData: " + data);

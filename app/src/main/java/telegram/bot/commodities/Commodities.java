@@ -11,6 +11,7 @@ import telegram.bot.client.MyHttpClient;
 import telegram.bot.client.Property;
 import telegram.bot.commodities.commodities.json.CommodityPrice;
 
+@Deprecated
 public class Commodities implements CommoditiesService, Property {
 
 	private final MyHttpClient myHttpClient;
@@ -25,7 +26,6 @@ public class Commodities implements CommoditiesService, Property {
 
 	public static void main(String[] args) {
 		Commodities app = new Commodities();
-		// TODO добавить товары
 		Double price = app.getCommodityPrice("BRENTOIL");
 	}
 

@@ -8,15 +8,12 @@ import telegram.bot.browser.YandexMain;
 
 public class Oil implements OilService {
 
-	Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-	YandexMain yandexMain = new YandexMain();
-
-	Oil() {
-	}
+	private final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	private final YandexMain yandexMain = new YandexMain();
 
 	public static void main(String[] args) {
 		Oil app = new Oil();
-		String price = app.getOilPrice(YandexMain.temp);
+		String price = app.getOilPrice(YandexMain.TEMP_FILE);
 	}
 
 	@Override
@@ -28,7 +25,7 @@ public class Oil implements OilService {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				String[] prices = line.split(" ");
-				oilPrice = prices[prices.length-1].replaceAll("[^\\d\\.$]", "");
+				oilPrice = prices[prices.length-1].replaceAll("[^\\d.$]", "");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

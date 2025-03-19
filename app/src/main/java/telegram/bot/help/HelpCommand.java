@@ -15,12 +15,11 @@ import telegram.bot.oil.OilCommand;
 public class HelpCommand extends BotCommand implements Sendable {
 
     public final static String COMMAND = "/help";
-    Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    String user;
-    SendMessage message;
+    private final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private String user;
 
     public void sendAnswer(AbsSender absSender, Long chatId) {
-        message = new SendMessage();
+        SendMessage message = new SendMessage();
         message.enableMarkdown(true);
         message.setChatId(chatId.toString());
         message.setText("Список команд:\n"

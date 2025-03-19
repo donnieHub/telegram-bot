@@ -17,7 +17,7 @@ import telegram.bot.forecast.yandex.json.YandexWeatherResponse;
 public class ForecastYandex implements ForecastService, Property {
 
 	private final MyHttpClient myHttpClient;
-	private Properties properties = new Properties();
+	private final Properties properties = new Properties();
 	private final static String URI = "Yandex-URI";
 	private final static String API_KEY = "Yandex-API-Key";
 	private City city;

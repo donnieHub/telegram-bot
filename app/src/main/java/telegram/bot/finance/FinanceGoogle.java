@@ -14,7 +14,7 @@ import telegram.bot.finance.google.json.UsdToRub;
 public class FinanceGoogle implements FinanceService, Property {
 
 	private final MyHttpClient myHttpClient;
-	private Properties properties = new Properties();
+	private final Properties properties = new Properties();
 	private final static String URI = "Google-Finance-URI";
 	private final static String API_KEY = "Google-Finance-API-Key";
 
