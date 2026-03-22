@@ -85,21 +85,21 @@ public class Utils {
     }
 
     public static double parsePrice(String priceString, String pattern) {
-        String cleanedString = priceString.replaceAll(",", ".").replaceAll("[^\\d.]", "");
+        String normalized = priceString
+                .replaceAll("\\s", "")
+                .replace(",", ".")
+                .replaceAll("[^\\d.]", "");
 
-        double price = Double.parseDouble(cleanedString);
-
-        DecimalFormat df = new DecimalFormat(pattern);
-        df.setDecimalSeparatorAlwaysShown(false);
-        String formattedPrice = df.format(price);
-
-        return Double.parseDouble(formattedPrice);
+        return Double.parseDouble(normalized);
     }
 
     public static double parsePrice(Double price, String pattern) {
         DecimalFormat df = new DecimalFormat(pattern);
         df.setDecimalSeparatorAlwaysShown(false);
-        String formattedPrice = df.format(price);
+        String formattedPrice = df.format(price)
+                .replaceAll("\\s", "")
+                .replace(",", ".")
+                .replaceAll("[^\\d.]", "");;
 
         return Double.parseDouble(formattedPrice);
     }

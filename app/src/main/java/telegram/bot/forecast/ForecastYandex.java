@@ -22,7 +22,7 @@ public class ForecastYandex implements ForecastService, Property {
 	private final static String API_KEY = "Yandex-API-Key";
 	private City city;
 
-	ForecastYandex() {
+	public ForecastYandex() {
 		Utils.initProperties(properties);
 		myHttpClient = new MyHttpClient(URI, API_KEY);
 	}
