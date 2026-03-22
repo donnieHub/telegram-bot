@@ -16,9 +16,13 @@ services:
       - tg-jar:/libs
 
   selenium:
-    image: selenium/standalone-chrome:latest
+    image: selenium/standalone-chrome:145.0-20260222
+    platform: linux/amd64
     container_name: selenium
-    restart: on-failure:3
+    restart: unless-stopped
+    shm_size: 2gb
+    environment:
+      - SE_SESSION_TIMEOUT=30
     ports:
       - "4444:4444"
     depends_on:
