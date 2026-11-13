@@ -43,21 +43,27 @@ public class YandexMain {
         Configuration.timeout = Long.parseLong(properties.getProperty("Selenium-Timeout"));
         Configuration.pageLoadTimeout = Long.parseLong(properties.getProperty("Selenium-PageLoadTimeout"));
         Configuration.pageLoadStrategy = properties.getProperty("Selenium-PageLoadStrategy");
-        logger.info("Before selenide browser start");
-        open(url);
-        logger.info("After selenide browser start");
-        SelenideElement usdElement = $("a[aria-label='Курс USD/RUB']");
-        SelenideElement eurElement = $("a[aria-label='Курс EUR/RUB']");
-        SelenideElement oilElement = $("a[aria-label='Курс OIL']");
-        data.setOil(parseData(oilElement));
-        data.setEur(parseData(eurElement));
-        data.setUsd(parseData(usdElement));
-        saveData(Arrays.asList(
-                data.getUsd() + "₽",
-                data.getEur() + "₽",
-                data.getOil() + "$"
-        ));
-        closeWebDriver();
+        try {
+            logger.info("Before selenide browser start");
+            open(url);
+            logger.info("After selenide browser start");
+
+            SelenideElement usdElement = $("a[aria-label='Курс USD/RUB']");
+            SelenideElement eurElement = $("a[aria-label='Курс EUR/RUB']");
+            SelenideElement oilElement = $("a[aria-label='Курс OIL']");
+
+            data.setOil(parseData(oilElement));
+            data.setEur(parseData(eurElement));
+            data.setUsd(parseData(usdElement));
+
+            saveData(Arrays.asList(
+                    data.getUsd() + "₽",
+                    data.getEur() + "₽",
+                    data.getOil() + "$"
+            ));
+        } finally {
+            closeWebDriver();
+        }
     }
 
     public double parseData(SelenideElement element) {

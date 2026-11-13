@@ -64,7 +64,7 @@ public class WeatherBot extends TelegramLongPollingBot {
         builder.build();
         try {
             this.execute(builder.build());
-        } catch (TelegramApiException e) {
+        } catch (TelegramApiException | AssertionError e) {
             logger.log(SEVERE, e.getMessage());
         }
     }
@@ -81,20 +81,40 @@ public class WeatherBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-
-        if (update.hasCallbackQuery()) {
-            try {
+        Long chatId = extractChatId(update);
+        try {
+            if (update.hasCallbackQuery()) {
                 handle(update.getCallbackQuery());
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
+            } else if (update.hasMessage()) {
+                handle(update.getMessage());
             }
+        } catch (Exception | AssertionError e) {
+            logger.log(SEVERE, "Ошибка при обработке апдейта", e);
+            sendErrorSafely(chatId);
+        }
+    }
+
+    private Long extractChatId(Update update) {
+        if (update.hasCallbackQuery() && update.getCallbackQuery().getMessage() != null) {
+            return update.getCallbackQuery().getMessage().getChatId();
         }
         if (update.hasMessage()) {
-            try {
-                handle(update.getMessage());
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            return update.getMessage().getChatId();
+        }
+        return null;
+    }
+
+    private void sendErrorSafely(Long chatId) {
+        if (chatId == null) {
+            return;
+        }
+        try {
+            this.execute(SendMessage.builder()
+                    .chatId(chatId)
+                    .text("Не удалось получить данные, попробуйте позже")
+                    .build());
+        } catch (TelegramApiException | AssertionError e) {
+            logger.log(SEVERE, "Не удалось отправить сообщение об ошибке", e);
         }
     }
 

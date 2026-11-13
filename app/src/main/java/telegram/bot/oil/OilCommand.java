@@ -23,7 +23,7 @@ public class OilCommand extends BotCommand implements Sendable {
         try {
             user = absSender.getMe().getFirstName();
             absSender.execute(message);
-        } catch (TelegramApiException e) {
+        } catch (TelegramApiException | AssertionError e) {
             logger.info("sendAnswer chatId: " + chatId);
             logger.info("sendAnswer getFrom: " + user);
             logger.info("sendAnswer message: " + message.getText());
