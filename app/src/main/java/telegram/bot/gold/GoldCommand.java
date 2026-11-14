@@ -22,11 +22,14 @@ public class GoldCommand extends BotCommand implements Sendable {
         SendMessage message = new SendMessage();
         message.enableMarkdown(true);
         message.setChatId(chatId.toString());
+
         double goldPriceRaw = Double.parseDouble(goldService.getGoldPrice(CbrMain.TEMP_FILE));
         Double myGoldPrice = goldPriceRaw * MY_AMOUNT * PRICE_ADJUSTMENT;
-        String myGoldPriceString = String.format("%,.0f", myGoldPrice);
+        Locale ru = new Locale("ru", "RU");
+        String myGoldPriceString = String.format(ru, "%,.0f", myGoldPrice);
+
         message.setText("Цена на золото за "
-                + String.format(new Locale("ru", "RU"), "%.0f", MY_AMOUNT)
+                + String.format("%.0f", MY_AMOUNT)
                 + " г. - " + myGoldPriceString + " р.");
         try {
             user = absSender.getMe().getFirstName();
