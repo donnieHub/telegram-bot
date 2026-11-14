@@ -11,6 +11,8 @@ import java.util.logging.Logger;
 
 public class GoldCommand extends BotCommand implements Sendable {
     public final static String COMMAND = "/gold";
+    public final static Double MY_AMOUNT = 70.0;
+    public final static Double PRICE_ADJUSTMENT = 0.95753318789;
     private final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private String user;
     private final GoldService goldService = GoldService.getInstance();
@@ -19,7 +21,10 @@ public class GoldCommand extends BotCommand implements Sendable {
         SendMessage message = new SendMessage();
         message.enableMarkdown(true);
         message.setChatId(chatId.toString());
-        message.setText("Цена на золото: " + goldService.getGoldPrice(CbrMain.TEMP_FILE));
+        double goldPriceRaw = Double.parseDouble(goldService.getGoldPrice(CbrMain.TEMP_FILE));
+        Double myGoldPrice = goldPriceRaw * MY_AMOUNT * PRICE_ADJUSTMENT;
+        String myGoldPriceString = String.format("%,.0f", myGoldPrice);
+        message.setText("Цена на золото за " + String.format("%.0f", MY_AMOUNT) + " г. - " + myGoldPriceString + " р.");
         try {
             user = absSender.getMe().getFirstName();
             absSender.execute(message);
