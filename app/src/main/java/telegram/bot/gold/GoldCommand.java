@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import telegram.bot.Sendable;
 import telegram.bot.browser.CbrMain;
 
+import java.util.Locale;
 import java.util.logging.Logger;
 
 public class GoldCommand extends BotCommand implements Sendable {
@@ -24,7 +25,9 @@ public class GoldCommand extends BotCommand implements Sendable {
         double goldPriceRaw = Double.parseDouble(goldService.getGoldPrice(CbrMain.TEMP_FILE));
         Double myGoldPrice = goldPriceRaw * MY_AMOUNT * PRICE_ADJUSTMENT;
         String myGoldPriceString = String.format("%,.0f", myGoldPrice);
-        message.setText("Цена на золото за " + String.format("%.0f", MY_AMOUNT) + " г. - " + myGoldPriceString + " р.");
+        message.setText("Цена на золото за "
+                + String.format(new Locale("ru", "RU"), "%.0f", MY_AMOUNT)
+                + " г. - " + myGoldPriceString + " р.");
         try {
             user = absSender.getMe().getFirstName();
             absSender.execute(message);
