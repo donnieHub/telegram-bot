@@ -12,6 +12,9 @@ services:
     depends_on:
       gradle_build:
         condition: service_completed_successfully
+    init: true
+    labels:
+      - autoheal=true
     healthcheck:
       test: [ "CMD-SHELL", "wget -q -T 10 -O /dev/null https://api.telegram.org || exit 1" ]
       interval: 60s
@@ -33,6 +36,16 @@ services:
     depends_on:
       tg_bot:
         condition: service_healthy
+
+  autoheal:
+    image: willfarrell/autoheal
+    container_name: autoheal
+    restart: always
+    environment:
+      - AUTOHEAL_CONTAINER_LABEL=autoheal
+      - AUTOHEAL_INTERVAL=30
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
 #  redis:
 #    build: ./redis
